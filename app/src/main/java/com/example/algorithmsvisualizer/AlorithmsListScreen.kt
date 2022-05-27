@@ -12,12 +12,18 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.BottomEnd
 import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterEnd
+import androidx.compose.ui.Alignment.Companion.CenterStart
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Alignment.Companion.End
+import androidx.compose.ui.Alignment.Companion.TopCenter
+import androidx.compose.ui.Alignment.Companion.TopEnd
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
@@ -38,7 +44,7 @@ fun AlgorithmsListScreen(
     ) {
 
         AlgorithmList(algorithmList = listOf(
-            Algorithm("Sort", painterResource(id = R.drawable.ic_launcher_background), 3)
+            Algorithm("Sort", 3)
         ), onClick = {})
     }
 
@@ -72,48 +78,62 @@ fun AlgorithmItem(
     algorithm: Algorithm,
     onClick: (Algorithm) -> Unit,
 ) {
-    Box(modifier = modifier
-        .clickable { onClick(algorithm) }
-        .background(MaterialTheme.colors.surface)
-        .height(100.dp)
-        .clip(RoundedCornerShape(2.dp)),
-        contentAlignment = Center) {
+    Box(
+        modifier = modifier
+            .clickable { onClick(algorithm) }
+            .background(MaterialTheme.colors.surface)
+            .height(100.dp)
+            .clip(RoundedCornerShape(2.dp)),
+    ) {
 
-        Icon(
-            painter = painterResource(id = R.drawable.ic_star),
+
+        Star(
             modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(start = 40.dp, top = 10.dp)
-                .size(15.dp),
-            contentDescription = null,
-            tint = Color.Yellow
+                .align(TopCenter)
+                .padding(top = 10.dp, start = 80.dp)
+                .size(12.dp)
+                .rotate(20f)
         )
 
-        Icon(
-            painter = painterResource(id = R.drawable.ic_star),
+        Star(
             modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(bottom = 40.dp, end = 16.dp)
-                .size(15.dp),
-            contentDescription = null,
-            tint = Color.Yellow
+                .align(BottomEnd)
+                .padding(bottom = 10.dp, end = 10.dp)
+                .size(15.dp)
+                .rotate(50f),
+            tint = MaterialTheme.colors.primary
+
         )
 
-        Icon(
-            painter = painterResource(id = R.drawable.ic_star),
+        Star(
             modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(start = 55.dp, top = 10.dp, bottom = 8.dp)
+                .align(BottomCenter)
+                .padding(start = 80.dp, bottom = 10.dp)
+                .size(12.dp)
+                .rotate(-50f),
+        )
+
+        Star(
+            modifier = Modifier
+                .align(TopEnd)
+                .padding(end = 10.dp, top = 10.dp)
+                .size(12.dp)
+                .rotate(-50f),
+        )
+
+        Star(
+            modifier = Modifier
+                .align(Center)
+                .padding(start = 50.dp)
                 .size(15.dp),
-            contentDescription = null,
-            tint = Color.Yellow
+            tint = MaterialTheme.colors.primary
         )
 
         Row(horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.padding(horizontal = 15.dp)) {
 
             Column(modifier = Modifier
-                .weight(1f)
+                .weight(2f)
                 .align(CenterVertically)
             ) {
 
@@ -127,12 +147,11 @@ fun AlgorithmItem(
             }
 
             Row(modifier = Modifier
-                .weight(1f)
-                .padding(start = 30.dp),
+                .weight(1f),
                 horizontalArrangement = Arrangement.End
             ) {
                 val radius = 32f
-                SortImage(radius = radius)
+                DrawSortImage(radius = radius, modifier = Modifier)
             }
 
         }
@@ -140,69 +159,7 @@ fun AlgorithmItem(
     }
 }
 
-@Composable
-fun SortImage(
-    modifier: Modifier = Modifier,
-    radius: Float = 35f,
-) {
-    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-        val maxHeight = constraints.maxHeight.toFloat()
-        val maxWidth = constraints.maxWidth.toFloat()
 
 
-
-        Canvas(modifier = modifier, onDraw = {
-
-            //Left Big Circle
-            drawCircle(
-                color = Color(0xFFD6D6D6),
-                radius = radius * 3,
-                center = Offset(y = maxHeight / 2, x = (radius * 3.2).toFloat()),
-                style = Stroke(2f,
-                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 10f))
-            )
-
-            //Right Big Circle
-            drawCircle(
-                color = Color(0xFFD6D6D6),
-                radius = radius * 3,
-                center = Offset(y = maxHeight / 2, x = (radius * 3.2 * 2).toFloat()),
-                style = Stroke(2f,
-                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 10f))
-            )
-
-            //First circle from left
-            drawCircle(
-                color = Color(0xFF4eeaca),
-                radius = radius,
-                center = Offset(y = maxHeight / 2, x = 0f)
-            )
-
-            //Second circle from left
-            drawCircle(
-                color = Color(0xFF4e9796),
-                radius = radius - 4,
-                center = Offset(y = maxHeight / 2, x = (radius * 3.2).toFloat()),
-            )
-
-            //Third circle from left
-            drawCircle(
-                color = Color(0xFF9a84d6),
-                radius = radius,
-                center = Offset(y = maxHeight / 2, x = (radius * 3.2 * 2).toFloat()),
-            )
-
-            //Fourth circle from left
-            drawCircle(
-                color = Color(0xFF816568),
-                radius = radius - 4,
-                center = Offset(y = maxHeight / 2, x = (radius * 3.2 * 3).toFloat()),
-            )
-
-
-        })
-    }
-
-}
 
 

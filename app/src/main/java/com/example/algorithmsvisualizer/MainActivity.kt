@@ -7,11 +7,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.example.algorithmsvisualizer.navigation.Navigation
 import com.example.algorithmsvisualizer.ui.theme.AlgorithmsVisualizerTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,7 +18,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             AlgorithmsVisualizerTheme {
                 Surface(modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxSize().background(MaterialTheme.colors.background)
                 ) {
                     val navController = rememberNavController()
                     Navigation(navController = navController,
