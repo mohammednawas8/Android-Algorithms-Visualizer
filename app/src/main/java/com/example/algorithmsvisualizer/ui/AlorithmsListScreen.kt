@@ -1,7 +1,7 @@
-package com.example.algorithmsvisualizer
+package com.example.algorithmsvisualizer.ui
 
-import android.util.Log
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,8 +12,10 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.BottomEnd
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
@@ -22,43 +24,24 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.algorithmsvisualizer.R
+import com.example.algorithmsvisualizer.data.model.Algorithm
 import com.example.algorithmsvisualizer.data.model.AlgorithmGroup
-import com.example.algorithmsvisualizer.viewmodel.AlgorithmViewModel
 
 @Composable
 fun AlgorithmsListScreen(
     navController: NavController,
-    viewModel: AlgorithmViewModel = hiltViewModel()
 ) {
-
-    val algorithmGroupStateList =
-        viewModel.algorithmGroupWithAlgorithms.collectAsState(initial = emptyList())
-
-    var algorithmGroup by remember {
-        mutableStateOf(emptyList<AlgorithmGroup>())
-    }
-
-    LaunchedEffect(algorithmGroupStateList.value) {
-        algorithmGroup = algorithmGroupStateList.value.map {
-            it.algorithmGroup
-        }
-    }
-
-
 
 
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
 
-        AlgorithmList(
-            algorithmList = algorithmGroup,
-            onClick = {
-                Log.d("test", it.toString())
-            }
-        )
+//        AlgorithmList(algorithmList = listOf(
+//            Algorithm("Sort", 3),
+//        ), onClick = {})
     }
 
 }
@@ -78,7 +61,7 @@ fun AlgorithmList(
     ) {
 
         items(algorithmList.size) {
-            AlgorithmItem(algorithmGroup = algorithmList[it], onClick = onClick)
+            AlgorithmItem(algorithmGroup = algorithmList[it] ,onClick = onClick)
         }
 
     }
@@ -91,7 +74,7 @@ fun AlgorithmItem(
     modifier: Modifier = Modifier,
     algorithmGroup: AlgorithmGroup,
     onClick: (AlgorithmGroup) -> Unit,
-) {
+    ) {
     Box(modifier = modifier
         .clickable { onClick(algorithmGroup) }
         .background(MaterialTheme.colors.surface)
@@ -129,34 +112,26 @@ fun AlgorithmItem(
             tint = Color.Yellow
         )
 
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.padding(horizontal = 15.dp)
-        ) {
+        Row(horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.padding(horizontal = 15.dp)) {
 
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .align(CenterVertically)
+            Column(modifier = Modifier
+                .weight(1f)
+                .align(CenterVertically)
             ) {
 
-                Text(
-                    text = algorithmGroup.name,
+                Text(text = algorithmGroup.name,
                     style = MaterialTheme.typography.h2,
-                    color = MaterialTheme.colors.onSurface
-                )
+                    color = MaterialTheme.colors.onSurface)
 
-                Text(
-                    text = algorithmGroup.count.toString().plus(" algorithms"),
+                Text(text = algorithmGroup.count.toString().plus(" algorithms"),
                     style = MaterialTheme.typography.h3, color = MaterialTheme.colors.primary,
-                    modifier = Modifier
-                )
+                    modifier = Modifier)
             }
 
-            Row(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 30.dp),
+            Row(modifier = Modifier
+                .weight(1f)
+                .padding(start = 30.dp),
                 horizontalArrangement = Arrangement.End
             ) {
                 val radius = 32f
@@ -186,10 +161,8 @@ fun SortImage(
                 color = Color(0xFFD6D6D6),
                 radius = radius * 3,
                 center = Offset(y = maxHeight / 2, x = (radius * 3.2).toFloat()),
-                style = Stroke(
-                    2f,
-                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 10f)
-                )
+                style = Stroke(2f,
+                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 10f))
             )
 
             //Right Big Circle
@@ -197,10 +170,8 @@ fun SortImage(
                 color = Color(0xFFD6D6D6),
                 radius = radius * 3,
                 center = Offset(y = maxHeight / 2, x = (radius * 3.2 * 2).toFloat()),
-                style = Stroke(
-                    2f,
-                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 10f)
-                )
+                style = Stroke(2f,
+                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 10f))
             )
 
             //First circle from left
