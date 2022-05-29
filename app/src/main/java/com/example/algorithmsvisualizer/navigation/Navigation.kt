@@ -1,14 +1,14 @@
-package com.example.algorithmsvisualizer
+package com.example.algorithmsvisualizer.navigation
 
 import androidx.compose.foundation.background
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.algorithmsvisualizer.navigation.NavigationRout
+import com.example.algorithmsvisualizer.AlgorithmVisualizeScreen
+import com.example.algorithmsvisualizer.AlgorithmsListScreen
 
 @Composable
 fun Navigation(
