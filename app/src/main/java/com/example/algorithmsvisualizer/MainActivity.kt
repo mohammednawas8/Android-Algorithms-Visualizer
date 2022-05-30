@@ -23,7 +23,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-
             AlgorithmsVisualizerTheme {
                 Surface(modifier = Modifier
                     .fillMaxSize()
@@ -33,7 +32,6 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier
                             .fillMaxSize())
                 }
-
             }
         }
     }

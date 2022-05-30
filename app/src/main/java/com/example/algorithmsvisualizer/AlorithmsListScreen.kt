@@ -24,29 +24,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.algorithmsvisualizer.data.db.relations.AlgorithmGroupWithAlgorithms
+import com.example.algorithmsvisualizer.data.model.Algorithm
 import com.example.algorithmsvisualizer.data.model.AlgorithmGroup
 import com.example.algorithmsvisualizer.viewmodel.AlgorithmViewModel
 
 @Composable
 fun AlgorithmsListScreen(
-    navController: NavController,
-    viewModel: AlgorithmViewModel = hiltViewModel()
+    viewModel: AlgorithmViewModel = hiltViewModel(),
+    onClick: (List<Algorithm>) -> Unit
 ) {
 
     val algorithmGroupStateList =
         viewModel.algorithmGroupWithAlgorithms.collectAsState(initial = emptyList())
-
-    var algorithmGroup by remember {
-        mutableStateOf(emptyList<AlgorithmGroup>())
-    }
-
-    LaunchedEffect(algorithmGroupStateList.value) {
-        algorithmGroup = algorithmGroupStateList.value.map {
-            it.algorithmGroup
-        }
-    }
-
-
 
 
     Column(
@@ -54,11 +44,9 @@ fun AlgorithmsListScreen(
     ) {
 
         AlgorithmList(
-            algorithmList = algorithmGroup,
-            onClick = {
-                Log.d("test", it.toString())
-            }
-        )
+            algorithmList = algorithmGroupStateList.value
+        ) {
+        }
     }
 
 }
@@ -66,8 +54,8 @@ fun AlgorithmsListScreen(
 @Composable
 fun AlgorithmList(
     modifier: Modifier = Modifier,
-    algorithmList: List<AlgorithmGroup>,
-    onClick: (AlgorithmGroup) -> Unit,
+    algorithmList: List<AlgorithmGroupWithAlgorithms>,
+    onClick: (List<Algorithm>) -> Unit,
 ) {
 
     LazyColumn(
@@ -77,8 +65,13 @@ fun AlgorithmList(
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
 
+        Log.d("Test",algorithmList.size.toString())
+
         items(algorithmList.size) {
-            AlgorithmItem(algorithmGroup = algorithmList[it], onClick = onClick)
+            val algorithmGroupWithAlgorithms = algorithmList[it]
+            AlgorithmItem(algorithmGroup = algorithmList[it].algorithmGroup, count = algorithmGroupWithAlgorithms.algorithms.size,onClick = {
+                onClick(algorithmGroupWithAlgorithms.algorithms)
+            })
         }
 
     }
@@ -90,6 +83,7 @@ fun AlgorithmList(
 fun AlgorithmItem(
     modifier: Modifier = Modifier,
     algorithmGroup: AlgorithmGroup,
+    count: Int,
     onClick: (AlgorithmGroup) -> Unit,
 ) {
     Box(modifier = modifier
@@ -147,7 +141,7 @@ fun AlgorithmItem(
                 )
 
                 Text(
-                    text = algorithmGroup.count.toString().plus(" algorithms"),
+                    text = count.toString().plus(" algorithms"),
                     style = MaterialTheme.typography.h3, color = MaterialTheme.colors.primary,
                     modifier = Modifier
                 )
