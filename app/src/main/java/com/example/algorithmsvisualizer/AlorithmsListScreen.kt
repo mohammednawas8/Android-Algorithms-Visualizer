@@ -1,6 +1,5 @@
 package com.example.algorithmsvisualizer
 
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,7 +22,6 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.algorithmsvisualizer.data.db.relations.AlgorithmGroupWithAlgorithms
 import com.example.algorithmsvisualizer.data.model.Algorithm
 import com.example.algorithmsvisualizer.data.model.AlgorithmGroup
@@ -32,7 +30,7 @@ import com.example.algorithmsvisualizer.viewmodel.AlgorithmViewModel
 @Composable
 fun AlgorithmsListScreen(
     viewModel: AlgorithmViewModel = hiltViewModel(),
-    onClick: (List<Algorithm>) -> Unit
+    onClick: (groupId: Int,algorithmList: List<Algorithm>) -> Unit
 ) {
 
     val algorithmGroupStateList =
@@ -45,7 +43,8 @@ fun AlgorithmsListScreen(
 
         AlgorithmList(
             algorithmList = algorithmGroupStateList.value
-        ) {
+        ) { groupId,algorithmList ->
+            onClick(groupId, algorithmList)
         }
     }
 
@@ -55,7 +54,7 @@ fun AlgorithmsListScreen(
 fun AlgorithmList(
     modifier: Modifier = Modifier,
     algorithmList: List<AlgorithmGroupWithAlgorithms>,
-    onClick: (List<Algorithm>) -> Unit,
+    onClick: (groupId: Int,List<Algorithm>) -> Unit,
 ) {
 
     LazyColumn(
@@ -65,12 +64,11 @@ fun AlgorithmList(
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
 
-        Log.d("Test",algorithmList.size.toString())
 
         items(algorithmList.size) {
             val algorithmGroupWithAlgorithms = algorithmList[it]
-            AlgorithmItem(algorithmGroup = algorithmList[it].algorithmGroup, count = algorithmGroupWithAlgorithms.algorithms.size,onClick = {
-                onClick(algorithmGroupWithAlgorithms.algorithms)
+            AlgorithmGroupItem(algorithmGroup = algorithmList[it].algorithmGroup, count = algorithmGroupWithAlgorithms.algorithms.size,onClick = {
+                onClick(algorithmGroupWithAlgorithms.algorithmGroup.groupId,algorithmGroupWithAlgorithms.algorithms)
             })
         }
 
@@ -80,7 +78,7 @@ fun AlgorithmList(
 }
 
 @Composable
-fun AlgorithmItem(
+fun AlgorithmGroupItem(
     modifier: Modifier = Modifier,
     algorithmGroup: AlgorithmGroup,
     count: Int,
@@ -93,35 +91,35 @@ fun AlgorithmItem(
         .clip(RoundedCornerShape(2.dp)),
         contentAlignment = Center) {
 
-        Icon(
-            painter = painterResource(id = R.drawable.ic_star),
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(start = 40.dp, top = 10.dp)
-                .size(15.dp),
-            contentDescription = null,
-            tint = Color.Yellow
-        )
-
-        Icon(
-            painter = painterResource(id = R.drawable.ic_star),
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(bottom = 40.dp, end = 16.dp)
-                .size(15.dp),
-            contentDescription = null,
-            tint = Color.Yellow
-        )
-
-        Icon(
-            painter = painterResource(id = R.drawable.ic_star),
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(start = 55.dp, top = 10.dp, bottom = 8.dp)
-                .size(15.dp),
-            contentDescription = null,
-            tint = Color.Yellow
-        )
+//        Icon(
+//            painter = painterResource(id = R.drawable.ic_star),
+//            modifier = Modifier
+//                .align(Alignment.TopCenter)
+//                .padding(start = 40.dp, top = 10.dp)
+//                .size(15.dp),
+//            contentDescription = null,
+//            tint = Color.Yellow
+//        )
+//
+//        Icon(
+//            painter = painterResource(id = R.drawable.ic_star),
+//            modifier = Modifier
+//                .align(Alignment.CenterEnd)
+//                .padding(bottom = 40.dp, end = 16.dp)
+//                .size(15.dp),
+//            contentDescription = null,
+//            tint = Color.Yellow
+//        )
+//
+//        Icon(
+//            painter = painterResource(id = R.drawable.ic_star),
+//            modifier = Modifier
+//                .align(Alignment.BottomCenter)
+//                .padding(start = 55.dp, top = 10.dp, bottom = 8.dp)
+//                .size(15.dp),
+//            contentDescription = null,
+//            tint = Color.Yellow
+//        )
 
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -130,31 +128,29 @@ fun AlgorithmItem(
 
             Column(
                 modifier = Modifier
-                    .weight(1f)
+                    .weight(0.6f)
                     .align(CenterVertically)
             ) {
 
                 Text(
                     text = algorithmGroup.name,
                     style = MaterialTheme.typography.h2,
-                    color = MaterialTheme.colors.onSurface
+                    color = MaterialTheme.colors.primary
                 )
 
                 Text(
                     text = count.toString().plus(" algorithms"),
-                    style = MaterialTheme.typography.h3, color = MaterialTheme.colors.primary,
+                    style = MaterialTheme.typography.h3, color = MaterialTheme.colors.onSurface,
                     modifier = Modifier
                 )
             }
 
             Row(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 30.dp),
+                modifier = Modifier.weight(0.3f),
                 horizontalArrangement = Arrangement.End
             ) {
                 val radius = 32f
-                SortImage(radius = radius)
+                DrawSortImage(radius = radius)
             }
 
         }
@@ -162,73 +158,6 @@ fun AlgorithmItem(
     }
 }
 
-@Composable
-fun SortImage(
-    modifier: Modifier = Modifier,
-    radius: Float = 35f,
-) {
-    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-        val maxHeight = constraints.maxHeight.toFloat()
-        val maxWidth = constraints.maxWidth.toFloat()
 
-
-
-        Canvas(modifier = modifier, onDraw = {
-
-            //Left Big Circle
-            drawCircle(
-                color = Color(0xFFD6D6D6),
-                radius = radius * 3,
-                center = Offset(y = maxHeight / 2, x = (radius * 3.2).toFloat()),
-                style = Stroke(
-                    2f,
-                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 10f)
-                )
-            )
-
-            //Right Big Circle
-            drawCircle(
-                color = Color(0xFFD6D6D6),
-                radius = radius * 3,
-                center = Offset(y = maxHeight / 2, x = (radius * 3.2 * 2).toFloat()),
-                style = Stroke(
-                    2f,
-                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 10f)
-                )
-            )
-
-            //First circle from left
-            drawCircle(
-                color = Color(0xFF4eeaca),
-                radius = radius,
-                center = Offset(y = maxHeight / 2, x = 0f)
-            )
-
-            //Second circle from left
-            drawCircle(
-                color = Color(0xFF4e9796),
-                radius = radius - 4,
-                center = Offset(y = maxHeight / 2, x = (radius * 3.2).toFloat()),
-            )
-
-            //Third circle from left
-            drawCircle(
-                color = Color(0xFF9a84d6),
-                radius = radius,
-                center = Offset(y = maxHeight / 2, x = (radius * 3.2 * 2).toFloat()),
-            )
-
-            //Fourth circle from left
-            drawCircle(
-                color = Color(0xFF816568),
-                radius = radius - 4,
-                center = Offset(y = maxHeight / 2, x = (radius * 3.2 * 3).toFloat()),
-            )
-
-
-        })
-    }
-
-}
 
 

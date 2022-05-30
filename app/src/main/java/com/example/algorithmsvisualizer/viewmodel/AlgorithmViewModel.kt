@@ -1,7 +1,9 @@
 package com.example.algorithmsvisualizer.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.algorithmsvisualizer.data.db.relations.AlgorithmWithCodes
 import com.example.algorithmsvisualizer.data.model.Algorithm
 import com.example.algorithmsvisualizer.events.AlgorithmScreenListEvents
 import com.example.algorithmsvisualizer.repo.AlgorithmRepository
@@ -16,7 +18,6 @@ class AlgorithmViewModel @Inject constructor(
     val algorithmGroupWithAlgorithms = algorithmRepository.getAlgorithmGroupWithAlgorithms()
 
     var algorithmListState = mutableStateOf(emptyList<Algorithm>())
-        private set
 
     fun onAlgorithmListScreenAction(event: AlgorithmScreenListEvents) {
         when (event) {
@@ -26,5 +27,6 @@ class AlgorithmViewModel @Inject constructor(
 
     private fun getAlgorithmList(algorithmList: List<Algorithm>) {
         algorithmListState.value = algorithmList
+
     }
 }
