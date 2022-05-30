@@ -1,6 +1,5 @@
 package com.example.algorithmsvisualizer.navigation
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -12,8 +11,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.algorithmsvisualizer.AlgorithmVisualizeScreen
-import com.example.algorithmsvisualizer.AlgorithmsListScreen
+import com.example.algorithmsvisualizer.AlgorithmGroupListScreen
+import com.example.algorithmsvisualizer.AlgorithmListScreen
 import com.example.algorithmsvisualizer.events.AlgorithmScreenListEvents
 import com.example.algorithmsvisualizer.viewmodel.AlgorithmViewModel
 
@@ -33,7 +32,7 @@ fun Navigation(
     ) {
 
         composable(route = NavigationRout.AlgorithmListScreenRout.rout) {
-            AlgorithmsListScreen { algorithmGroupId,algorithmList ->
+            AlgorithmGroupListScreen(viewModel) { algorithmGroupId, algorithmList ->
                 viewModel.onAlgorithmListScreenAction(AlgorithmScreenListEvents.AlgorithmGroupClick(
                     algorithmList))
                 navController.navigate(NavigationRout.AlgorithmVisualizerScreenRout.rout + "/$algorithmGroupId")
@@ -52,9 +51,10 @@ fun Navigation(
                 it.arguments?.getInt("groupId")
             }
 
-            AlgorithmVisualizeScreen(
+            AlgorithmListScreen(
                 navController = navController,
-                groupId!!
+                groupId!!,
+                viewModel
             )
         }
 

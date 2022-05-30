@@ -9,38 +9,41 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.algorithmsvisualizer.data.model.Algorithm
 import com.example.algorithmsvisualizer.viewmodel.AlgorithmViewModel
 
 @Composable
-fun AlgorithmVisualizeScreen(
+fun AlgorithmListScreen(
     navController: NavController,
     groupId: Int,
-    viewModel: AlgorithmViewModel = hiltViewModel(),
+    viewModel: AlgorithmViewModel,
 ) {
 
     val algorithmList = viewModel.algorithmListState
 
-    Log.d("Test",viewModel.algorithmListState.value.toString())
-
     Column(modifier = Modifier.fillMaxSize()) {
-        AlgorithmList(algorithmsItems = algorithmList.value, onClick = {
 
-        })
+        AlgorithmList(
+            algorithmsItems = algorithmList.value,
+            modifier = Modifier.padding(horizontal = 15.dp),
+            onClick = {
+
+            })
 
     }
 
@@ -49,20 +52,28 @@ fun AlgorithmVisualizeScreen(
 
 @Composable
 fun AlgorithmList(
+    modifier: Modifier = Modifier,
     algorithmsItems: List<Algorithm>,
     onClick: (Algorithm) -> Unit,
 ) {
-    LazyColumn() {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(top = 10.dp, bottom = 10.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         items(algorithmsItems.size) {
-            AlgorithmItem(image = painterResource(id = R.drawable.insertion_sort),
+            AlgorithmCard(
+                image = painterResource(id = R.drawable.insertion_sort),
                 algorithm = algorithmsItems[it],
-                onClick = onClick)
+                onClick = onClick,
+            )
         }
     }
 }
 
 @Composable
-fun AlgorithmItem(
+fun AlgorithmCard(
     modifier: Modifier = Modifier,
     image: Painter,
     algorithm: Algorithm,
@@ -78,33 +89,42 @@ fun AlgorithmItem(
             .clickable { onClick(algorithm) }
     ) {
 
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(0.dp)
+        ) {
             Image(
                 painter = image,
                 contentDescription = algorithm.name,
                 modifier = Modifier
                     .clip(RoundedCornerShape(5.dp))
-                    .shadow(5.dp)
+                    .shadow(5.dp),
+                contentScale = ContentScale.Crop
             )
 
-            Spacer(modifier = Modifier.height(15.dp))
+            Spacer(modifier = Modifier.height(7.dp))
 
             Text(
                 text = algorithm.name,
-                style = MaterialTheme.typography.h2,
                 color = titleColor,
-                modifier = Modifier.padding(7.dp)
+                style = MaterialTheme.typography.h2,
+                modifier = Modifier
+                    .padding(horizontal = 5.dp)
             )
+
+            Log.d("test",algorithm.generalInformation)
+
 
             Text(
-                text = algorithm.generalInformation,
-                style = MaterialTheme.typography.h3, color = descriptionTextColor,
-                fontSize = 14.sp,
-                modifier = Modifier,
-                maxLines = 2
+                text = algorithm.generalInformation.trim(),
+                color = descriptionTextColor,
+                modifier = Modifier
+                    .padding(horizontal = 8.dp),
+                style = MaterialTheme.typography.h3,
+                fontSize = 16.sp
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(14.dp))
 
         }
 

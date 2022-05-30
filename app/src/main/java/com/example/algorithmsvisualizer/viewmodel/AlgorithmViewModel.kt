@@ -16,8 +16,11 @@ class AlgorithmViewModel @Inject constructor(
 ) : ViewModel() {
 
     val algorithmGroupWithAlgorithms = algorithmRepository.getAlgorithmGroupWithAlgorithms()
+    val testState = mutableStateOf(0)
+
 
     var algorithmListState = mutableStateOf(emptyList<Algorithm>())
+        private set
 
     fun onAlgorithmListScreenAction(event: AlgorithmScreenListEvents) {
         when (event) {
@@ -26,7 +29,9 @@ class AlgorithmViewModel @Inject constructor(
     }
 
     private fun getAlgorithmList(algorithmList: List<Algorithm>) {
+        Log.d("test",algorithmList.toString())
         algorithmListState.value = algorithmList
+        testState.value = 12
 
     }
 }

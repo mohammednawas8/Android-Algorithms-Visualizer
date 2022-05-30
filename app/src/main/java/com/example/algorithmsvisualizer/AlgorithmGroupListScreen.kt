@@ -28,8 +28,8 @@ import com.example.algorithmsvisualizer.data.model.AlgorithmGroup
 import com.example.algorithmsvisualizer.viewmodel.AlgorithmViewModel
 
 @Composable
-fun AlgorithmsListScreen(
-    viewModel: AlgorithmViewModel = hiltViewModel(),
+fun AlgorithmGroupListScreen(
+    viewModel: AlgorithmViewModel,
     onClick: (groupId: Int,algorithmList: List<Algorithm>) -> Unit
 ) {
 
