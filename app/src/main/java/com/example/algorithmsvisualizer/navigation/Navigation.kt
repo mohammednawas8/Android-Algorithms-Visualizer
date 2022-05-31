@@ -32,9 +32,11 @@ fun Navigation(
     ) {
 
         composable(route = NavigationRout.AlgorithmListScreenRout.rout) {
+
             AlgorithmGroupListScreen(viewModel) { algorithmGroupId, algorithmList ->
                 viewModel.onAlgorithmListScreenAction(AlgorithmScreenListEvents.AlgorithmGroupClick(
                     algorithmList))
+
                 navController.navigate(NavigationRout.AlgorithmVisualizerScreenRout.rout + "/$algorithmGroupId")
             }
         }
@@ -57,6 +59,7 @@ fun Navigation(
                 viewModel
             )
         }
+
 
     }
 

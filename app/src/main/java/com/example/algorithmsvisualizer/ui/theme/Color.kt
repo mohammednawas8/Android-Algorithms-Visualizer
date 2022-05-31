@@ -17,4 +17,7 @@ val Orange600 = Color(0xFFd17165)
 //Secondary
 val Orange800 = Color(0xFFe96b56)
 //Prime
-val LightGray = Color(0xFF7b8996)
+val LightGrayBlue = Color(0xFF7b8996)
+
+//Secondary Variant
+val GrayBlue = Color(0xFF4E6A82)

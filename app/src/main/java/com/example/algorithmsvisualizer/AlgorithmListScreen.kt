@@ -69,13 +69,11 @@ fun AlgorithmListScreen(
 
 
 
-
-
         AlgorithmList(
             algorithmsItems = algorithmList.value,
             modifier = Modifier.padding(horizontal = 15.dp),
             onClick = {
-
+                navController.navigate()
             })
 
     }

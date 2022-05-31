@@ -29,7 +29,6 @@ class AlgorithmViewModel @Inject constructor(
     }
 
     private fun getAlgorithmList(algorithmList: List<Algorithm>) {
-        Log.d("test",algorithmList.toString())
         algorithmListState.value = algorithmList
         testState.value = 12
 
