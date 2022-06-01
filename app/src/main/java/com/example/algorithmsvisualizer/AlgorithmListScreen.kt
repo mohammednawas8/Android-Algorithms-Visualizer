@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.algorithmsvisualizer.data.model.Algorithm
+import com.example.algorithmsvisualizer.events.AppEvents
+import com.example.algorithmsvisualizer.navigation.NavigationRout
 import com.example.algorithmsvisualizer.viewmodel.AlgorithmViewModel
 
 @Composable
@@ -73,7 +75,8 @@ fun AlgorithmListScreen(
             algorithmsItems = algorithmList.value,
             modifier = Modifier.padding(horizontal = 15.dp),
             onClick = {
-                navController.navigate()
+                navController.navigate(NavigationRout.AlgorithmVisualizerScreen.rout + "/${it.algorithmId}")
+                viewModel.onAlgorithmScreenAction(AppEvents.AlgorithmClick(it))
             })
 
     }
@@ -142,8 +145,6 @@ fun AlgorithmCard(
                 modifier = Modifier
                     .padding(horizontal = 5.dp)
             )
-
-            Log.d("test", algorithm.generalInformation)
 
 
             Text(

@@ -1,5 +1,7 @@
 package com.example.algorithmsvisualizer
 
+import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -9,16 +11,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.algorithmsvisualizer.data.model.Algorithm
 import com.example.algorithmsvisualizer.viewmodel.AlgorithmViewModel
 
 @Composable
 fun AlgorithmVisualizerScreen(
-    algorithm: Algorithm,
+    algorithmId: Int,
     viewModel: AlgorithmViewModel,
     navController: NavController,
 ) {
+    val algorithm = viewModel.algorithmState.value
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -26,7 +30,8 @@ fun AlgorithmVisualizerScreen(
             TopBar(name = algorithm.name, timeComplexity = algorithm.timeComplexity) {
                 navController.navigateUp()
             }
-        }
+        },
+        backgroundColor = MaterialTheme.colors.background
     ) {
 
     }
@@ -44,6 +49,8 @@ fun TopBar(
 
     TopAppBar(
         modifier = Modifier.fillMaxWidth(),
+        backgroundColor = MaterialTheme.colors.background,
+        elevation = 0.dp
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -56,15 +63,21 @@ fun TopBar(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Back",
                     tint = MaterialTheme.colors.onSurface,
-                    modifier = Modifier.size(16.dp)
+                    modifier = Modifier.size(30.dp)
                 )
             }
 
-            Text(text = name, style = MaterialTheme.typography.h2, color = Color.White)
+            Text(text = name,
+                style = MaterialTheme.typography.h2,
+                color = Color.White,
+                fontSize = 18.sp)
 
             Text(text = timeComplexity,
                 style = MaterialTheme.typography.h2,
-                color = MaterialTheme.colors.secondaryVariant)
+                color = MaterialTheme.colors.secondaryVariant,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(end = 10.dp)
+            )
 
 
         }

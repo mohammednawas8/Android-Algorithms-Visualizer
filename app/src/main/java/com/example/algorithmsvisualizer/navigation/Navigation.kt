@@ -13,7 +13,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.algorithmsvisualizer.AlgorithmGroupListScreen
 import com.example.algorithmsvisualizer.AlgorithmListScreen
-import com.example.algorithmsvisualizer.events.AlgorithmScreenListEvents
+import com.example.algorithmsvisualizer.AlgorithmVisualizerScreen
+import com.example.algorithmsvisualizer.events.AppEvents
 import com.example.algorithmsvisualizer.viewmodel.AlgorithmViewModel
 
 @Composable
@@ -25,24 +26,24 @@ fun Navigation(
 
     NavHost(
         navController = navController,
-        startDestination = NavigationRout.AlgorithmListScreenRout.rout,
+        startDestination = NavigationRout.AlgorithmGroupListScreen.rout,
         modifier = modifier
             .background(MaterialTheme.colors.background)
             .then(modifier)
     ) {
 
-        composable(route = NavigationRout.AlgorithmListScreenRout.rout) {
+        composable(route = NavigationRout.AlgorithmGroupListScreen.rout) {
 
             AlgorithmGroupListScreen(viewModel) { algorithmGroupId, algorithmList ->
-                viewModel.onAlgorithmListScreenAction(AlgorithmScreenListEvents.AlgorithmGroupClick(
+                viewModel.onAlgorithmGroupScreenAction(AppEvents.AlgorithmGroupClick(
                     algorithmList))
 
-                navController.navigate(NavigationRout.AlgorithmVisualizerScreenRout.rout + "/$algorithmGroupId")
+                navController.navigate(NavigationRout.AlgorithmListScreen.rout + "/$algorithmGroupId")
             }
         }
 
         composable(
-            route = NavigationRout.AlgorithmVisualizerScreenRout.rout + "/{groupId}",
+            route = NavigationRout.AlgorithmListScreen.rout + "/{groupId}",
             arguments = listOf(
                 navArgument("groupId") {
                     nullable = false
@@ -58,6 +59,26 @@ fun Navigation(
                 groupId!!,
                 viewModel
             )
+        }
+
+        composable(
+            route = NavigationRout.AlgorithmVisualizerScreen.rout + "/{algorithmId}",
+            arguments = listOf(
+                navArgument("algorithmId") {
+                    nullable = false
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            val algorithmId = remember {
+                it.arguments?.getInt("algorithmId")
+            }
+
+            AlgorithmVisualizerScreen(algorithmId = algorithmId!!,
+                viewModel = viewModel,
+                navController = navController
+            )
+
         }
 
 
