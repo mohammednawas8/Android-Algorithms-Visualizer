@@ -14,10 +14,9 @@ val BlueGray900 = Color(0xFF212f3a)
 val BlueGray850 = Color(0xFF253544)
 //OnSurface
 val Orange600 = Color(0xFFd17165)
-//Secondary
+//Primary
 val Orange800 = Color(0xFFe96b56)
 //Prime
 val LightGrayBlue = Color(0xFF7b8996)
-
 //Secondary Variant
 val GrayBlue = Color(0xFF4E6A82)

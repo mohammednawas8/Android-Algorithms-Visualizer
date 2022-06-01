@@ -4,6 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/mo/AndroidStudioProjects/AlgorithmsVisualizer/app/src/main/res/drawable/ic_star.xml" value="0.1" />
+        <entry key="..\:/Users/moham/Desktop/AlgorithmsVisualizerProj/app/src/main/res/drawable/ic_code.xml" value="0.1395" />
+        <entry key="..\:/Users/moham/Desktop/AlgorithmsVisualizerProj/app/src/main/res/drawable/ic_forward.xml" value="0.1" />
+        <entry key="..\:/Users/moham/Desktop/AlgorithmsVisualizerProj/app/src/main/res/drawable/ic_pause.xml" value="0.103" />
+        <entry key="..\:/Users/moham/Desktop/AlgorithmsVisualizerProj/app/src/main/res/drawable/ic_play.xml" value="0.103" />
+        <entry key="..\:/Users/moham/Desktop/AlgorithmsVisualizerProj/app/src/main/res/drawable/ic_text.xml" value="0.1395" />
       </map>
     </option>
   </component>

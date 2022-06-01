@@ -6,6 +6,7 @@ import androidx.room.Transaction
 import com.example.algorithmsvisualizer.data.db.relations.AlgorithmGroupWithAlgorithms
 import com.example.algorithmsvisualizer.data.db.relations.AlgorithmWithCodes
 import com.example.algorithmsvisualizer.data.model.Algorithm
+import com.example.algorithmsvisualizer.data.model.AlgorithmCode
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -23,6 +24,8 @@ interface AlgorithmDao {
     @Query("SELECT * FROM Algorithm")
     fun getAlgorithmWithAlgorithmCodes(): Flow<List<AlgorithmWithCodes>>
 
-
+    @Transaction
+    @Query("SELECT * FROM AlgorithmCode WHERE algorithmId=:algorithmId")
+    fun getAlgorithmCodesByAlgorithmId(algorithmId: Int): Flow<List<AlgorithmCode>>
 
 }
