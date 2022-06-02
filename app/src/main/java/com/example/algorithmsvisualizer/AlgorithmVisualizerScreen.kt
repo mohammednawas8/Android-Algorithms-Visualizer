@@ -1,6 +1,8 @@
 package com.example.algorithmsvisualizer
 
 import android.util.Log
+import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,6 +22,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Bottom
 import androidx.compose.ui.Alignment.Companion.BottomCenter
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.RoundRect
@@ -31,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.algorithmsvisualizer.data.model.Algorithm
 import com.example.algorithmsvisualizer.data.model.AlgorithmCode
+import com.example.algorithmsvisualizer.ui.theme.LightGrayBlue
 import com.example.algorithmsvisualizer.ui.theme.WorkSans
 import com.example.algorithmsvisualizer.viewmodel.AlgorithmViewModel
 
@@ -67,20 +72,22 @@ fun AlgorithmVisualizerScreen(
     ) {
         val bottomPadding = it.calculateBottomPadding()
         Column(
-            modifier = Modifier.fillMaxSize().padding(bottom = bottomPadding)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = bottomPadding)
         ) {
             VisualizerSection(
                 modifier = Modifier
                     .weight(0.4f)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                arrayOf(250, 31, 8, 32, 15,75,48,374,92,52,84)
 
             )
 
             TabBarSection(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(0.6f)
-                ,
+                    .weight(0.6f),
                 tabs = listOf(
                     TabItem(icon = painterResource(id = R.drawable.ic_text), "Description"),
                     TabItem(icon = painterResource(id = R.drawable.ic_code), "Code"),
@@ -97,13 +104,100 @@ fun AlgorithmVisualizerScreen(
 
 @Composable
 fun VisualizerSection(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    arr: Array<Int>
 ) {
 
 
-    Box(modifier = modifier) {
-        Text(text = "Testy", modifier = Modifier.align(Alignment.Center))
+    BoxWithConstraints(modifier = modifier, contentAlignment = BottomCenter) {
+        val maxHeight = constraints.maxHeight
+        val maxWidth = constraints.maxWidth
+
+
+        val maxElementInArray = arr.maxOrNull()
+        var minimizeAmount = 0
+        val itemWidth = remember {
+            (maxWidth / arr.size) / 3
+        }
+
+
+        minimizeAmount = if (maxHeight > maxElementInArray!!)
+            maxHeight
+        else
+            0
+
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            var animationDelay = remember {
+                0
+            }
+            arr.forEachIndexed { index, element ->
+                ArrayItemReprisentation(
+                    modifier = Modifier.align(Bottom),
+                    height = element,
+                    width = itemWidth,
+                    index = index,
+                    element = element,
+                    animationDelay = animationDelay
+                ) {
+
+                }
+                animationDelay += 50
+            }
+        }
+
+
     }
+}
+
+@Composable
+fun ArrayItemReprisentation(
+    modifier: Modifier = Modifier,
+    animationDelay: Int = 0,
+    animationDuration: Int = 350,
+    height: Int,
+    width: Int,
+    index: Int,
+    element: Int,
+    onClick: (Int) -> Unit
+) {
+
+    var isEnabled by remember {
+        mutableStateOf(false)
+    }
+
+
+    val boxHeight = animateIntAsState(
+        targetValue = if (!isEnabled) 0 else height, animationSpec = tween(
+            durationMillis = animationDuration,
+            delayMillis = animationDelay
+        )
+    )
+
+    LaunchedEffect(key1 = true) {
+        isEnabled = true
+    }
+
+    Log.d("test", height.toString())
+
+    Column(modifier = modifier) {
+        Text(
+            text = element.toString(),
+            modifier = Modifier.align(CenterHorizontally),
+            color = Color.White,
+            fontSize = (width / 3).sp,
+        )
+        Box(modifier = Modifier
+            .height(boxHeight.value.dp)
+            .width(width.dp)
+            .background(LightGrayBlue)
+            .clickable { onClick(index) })
+
+    }
+
 }
 
 @Composable
@@ -128,7 +222,7 @@ fun TabBarSection(
             TabRow(
                 selectedTabIndex = selectedTab,
                 backgroundColor = MaterialTheme.colors.surface,
-                contentColor = MaterialTheme.colors.surface,
+                contentColor = Color.Transparent,
                 modifier = Modifier.fillMaxSize()
             ) {
                 tabs.forEachIndexed { i, tab ->
@@ -136,7 +230,10 @@ fun TabBarSection(
                 }
             }
         }
-        Column(modifier = Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.Top) {
+        Column(
+            modifier = Modifier.verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.Top
+        ) {
             SelectionContainer {
                 Text(
                     text = if (selectedTab == 0) algorithmDescription else code.code,
