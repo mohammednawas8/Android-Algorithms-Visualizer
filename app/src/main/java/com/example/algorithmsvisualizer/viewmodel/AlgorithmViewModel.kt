@@ -1,68 +1,49 @@
 package com.example.algorithmsvisualizer.viewmodel
 
-import android.util.Log
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.algorithmsvisualizer.data.db.relations.AlgorithmWithCodes
-import com.example.algorithmsvisualizer.data.model.Algorithm
-import com.example.algorithmsvisualizer.data.model.AlgorithmCode
+import com.example.algorithmsvisualizer.algorithms.sorting.InsertionSort
 import com.example.algorithmsvisualizer.events.AppEvents
-import com.example.algorithmsvisualizer.repo.AlgorithmRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class AlgorithmViewModel @Inject constructor(
-    private val algorithmRepository: AlgorithmRepository,
-) : ViewModel() {
+class AlgorithmViewModel : ViewModel() {
 
-    val algorithmGroupWithAlgorithms = algorithmRepository.getAlgorithmGroupWithAlgorithms()
+    val onSortingFinish = mutableStateOf(false)
 
-
-    var algorithmListState = mutableStateOf(emptyList<Algorithm>())
-        private set
-
-    val algorithmState = mutableStateOf<Algorithm>(
-        Algorithm(
-            0, "", "", "", 0
-        )
-    )
-
-    var algorithmCodes = mutableStateOf<List<AlgorithmCode>>(emptyList())
-        private set
-
-    fun onAlgorithmGroupScreenAction(event: AppEvents) {
+    fun onAction(event: AppEvents) {
         when (event) {
-            is AppEvents.AlgorithmGroupClick -> getAlgorithmList(event.algorithmList)
-        }
-    }
 
-    fun onAlgorithmScreenAction(event: AppEvents) {
-        when (event) {
-            is AppEvents.AlgorithmClick -> {
-                getAlgorithm(event.algorithm)
-                getAlgorithmCodes(event.algorithm)
+            is AppEvents.AlgorithmSorting -> {
+
+                val algorithm = event.algorithm
+                val arr = event.arr
+                val delay = event.delay
+                if (algorithm.name == "Insertion Sort") {
+                    insertionSort(arr, delay)
+                }
+
             }
+            else -> {}
         }
     }
 
-    private fun getAlgorithmCodes(algorithm: Algorithm) = viewModelScope.launch {
-        algorithmRepository.getAlgorithmCodesByAlgorithmId(algorithm.algorithmId).collect {
-            algorithmCodes.value = it
-        }
+    private fun insertionSort(
+        arr: Array<Int>,
+        delayDuration: Long,
+
+        ) = viewModelScope.launch {
+
+        InsertionSort.sort(
+            arr,
+            delayDuration
+        )
+
+        onSortingFinish.value = true
+
     }
 
-    private fun getAlgorithm(algorithm: Algorithm) {
-        algorithmState.value = algorithm
-
-    }
-
-
-    private fun getAlgorithmList(algorithmList: List<Algorithm>) {
-        algorithmListState.value = algorithmList
-    }
 }

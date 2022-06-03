@@ -16,12 +16,14 @@ import com.example.algorithmsvisualizer.AlgorithmListScreen
 import com.example.algorithmsvisualizer.AlgorithmVisualizerScreen
 import com.example.algorithmsvisualizer.events.AppEvents
 import com.example.algorithmsvisualizer.viewmodel.AlgorithmViewModel
+import com.example.algorithmsvisualizer.viewmodel.ScreensViewModel
 
 @Composable
 fun Navigation(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    viewModel: AlgorithmViewModel = hiltViewModel(),
+    screenViewModel: ScreensViewModel = hiltViewModel(),
+    algorithmViewModel: AlgorithmViewModel = hiltViewModel(),
 ) {
 
     NavHost(
@@ -34,8 +36,8 @@ fun Navigation(
 
         composable(route = NavigationRout.AlgorithmGroupListScreen.rout) {
 
-            AlgorithmGroupListScreen(viewModel) { algorithmGroupId, algorithmList ->
-                viewModel.onAlgorithmGroupScreenAction(AppEvents.AlgorithmGroupClick(
+            AlgorithmGroupListScreen(screenViewModel) { algorithmGroupId, algorithmList ->
+                screenViewModel.onAlgorithmGroupScreenAction(AppEvents.AlgorithmGroupClick(
                     algorithmList))
 
                 navController.navigate(NavigationRout.AlgorithmListScreen.rout + "/$algorithmGroupId")
@@ -57,7 +59,7 @@ fun Navigation(
             AlgorithmListScreen(
                 navController = navController,
                 groupId!!,
-                viewModel
+                screenViewModel
             )
         }
 
@@ -75,7 +77,8 @@ fun Navigation(
             }
 
             AlgorithmVisualizerScreen(algorithmId = algorithmId!!,
-                viewModel = viewModel,
+                screenViewModel = screenViewModel,
+                algorithmViewModel = algorithmViewModel,
                 navController = navController
             )
 

@@ -1,12 +1,10 @@
 package com.example.algorithmsvisualizer
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -15,21 +13,15 @@ import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.algorithmsvisualizer.data.db.relations.AlgorithmGroupWithAlgorithms
 import com.example.algorithmsvisualizer.data.model.Algorithm
 import com.example.algorithmsvisualizer.data.model.AlgorithmGroup
-import com.example.algorithmsvisualizer.viewmodel.AlgorithmViewModel
+import com.example.algorithmsvisualizer.viewmodel.ScreensViewModel
 
 @Composable
 fun AlgorithmGroupListScreen(
-    viewModel: AlgorithmViewModel,
+    viewModel: ScreensViewModel,
     onClick: (groupId: Int,algorithmList: List<Algorithm>) -> Unit
 ) {
 

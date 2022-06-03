@@ -6,48 +6,66 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Bottom
 import androidx.compose.ui.Alignment.Companion.BottomCenter
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
-import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.algorithmsvisualizer.data.model.Algorithm
 import com.example.algorithmsvisualizer.data.model.AlgorithmCode
+import com.example.algorithmsvisualizer.events.AppEvents
+import com.example.algorithmsvisualizer.helper.ArrayOperations
 import com.example.algorithmsvisualizer.ui.theme.LightGrayBlue
 import com.example.algorithmsvisualizer.ui.theme.WorkSans
 import com.example.algorithmsvisualizer.viewmodel.AlgorithmViewModel
+import com.example.algorithmsvisualizer.viewmodel.ScreensViewModel
 
 @Composable
 fun AlgorithmVisualizerScreen(
     algorithmId: Int,
-    viewModel: AlgorithmViewModel,
+    screenViewModel: ScreensViewModel,
+    algorithmViewModel: AlgorithmViewModel,
     navController: NavController,
 ) {
-    val algorithm = viewModel.algorithmState.value
-    val codes = viewModel.algorithmCodes.value
 
+    val algorithm = screenViewModel.algorithmState.value
+
+    val codes = screenViewModel.algorithmCodes.value
+
+    val arr by remember {
+        mutableStateOf(arrayOf(250, 31, 8, 32, 15, 75, 48, 374, 92, 52, 84))
+    }
+
+    var isAlgorithmPlaying by remember {
+        mutableStateOf(false)
+    }
+
+    var onSortingFinish = algorithmViewModel.onSortingFinish.value
+
+
+    if(onSortingFinish) {
+        isAlgorithmPlaying = false
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -60,12 +78,16 @@ fun AlgorithmVisualizerScreen(
         bottomBar = {
             BottomBar(
                 modifier = Modifier.fillMaxWidth(),
-                onPlayPauseClick = { /*TODO*/ },
+                onPlayPauseClick = {
+                    isAlgorithmPlaying = !isAlgorithmPlaying
+                    algorithmViewModel.onAction(AppEvents.AlgorithmSorting(algorithm,arr,300))
+                },
+
                 onNextStepClick = { /*TODO*/ },
                 onBackStepClick = { /*TODO*/ },
                 onSpeedUpClick = { /*TODO*/ },
                 onSlowDownClick = { /*TODO*/ },
-                isPlaying = false
+                isPlaying = isAlgorithmPlaying
 
             )
         }
@@ -80,8 +102,7 @@ fun AlgorithmVisualizerScreen(
                 modifier = Modifier
                     .weight(0.4f)
                     .fillMaxWidth(),
-                arrayOf(250, 31, 8, 32, 15,75,48,374,92,52,84)
-
+                arr
             )
 
             TabBarSection(
@@ -105,27 +126,28 @@ fun AlgorithmVisualizerScreen(
 @Composable
 fun VisualizerSection(
     modifier: Modifier = Modifier,
-    arr: Array<Int>
+    elements: Array<Int>,
+//    onValueChangeClick: (Int) -> Unit,
 ) {
 
+    var arr = elements
 
     BoxWithConstraints(modifier = modifier, contentAlignment = BottomCenter) {
         val maxHeight = constraints.maxHeight
         val maxWidth = constraints.maxWidth
 
 
-        val maxElementInArray = arr.maxOrNull()
-        var minimizeAmount = 0
         val itemWidth = remember {
-            (maxWidth / arr.size) / 3
+            ((maxWidth / arr.size) / 3.2).toInt()
         }
 
+        var indexToChange by remember {
+            mutableStateOf(0)
+        }
 
-        minimizeAmount = if (maxHeight > maxElementInArray!!)
-            maxHeight
-        else
-            0
-
+        var shouldShowChangeValueAlert by remember {
+            mutableStateOf(false)
+        }
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -141,16 +163,82 @@ fun VisualizerSection(
                     width = itemWidth,
                     index = index,
                     element = element,
-                    animationDelay = animationDelay
-                ) {
-
+                    animationDelay = animationDelay,
+                ) { indexClicked ->
+                    indexToChange = indexClicked
+                    shouldShowChangeValueAlert = true
                 }
                 animationDelay += 50
             }
         }
 
 
+        if (shouldShowChangeValueAlert)
+            ChangeElementAlertDialog(
+                onUpdateClick = {
+                    arr[indexToChange] = it
+                    shouldShowChangeValueAlert = false
+                },
+                onDelete = {
+                    arr = ArrayOperations.deleteArrayElement(arr, indexToChange)
+                    shouldShowChangeValueAlert = false
+                },
+                onDismiss = { shouldShowChangeValueAlert = false },
+                currentElement = arr[indexToChange],
+            )
+
+
     }
+}
+
+@Composable
+fun ChangeElementAlertDialog(
+    modifier: Modifier = Modifier,
+    onUpdateClick: (Int) -> Unit,
+    onDelete: (Int) -> Unit,
+    onDismiss: () -> Unit,
+    currentElement: Int,
+) {
+    var number by remember {
+        mutableStateOf(currentElement)
+    }
+
+    Box(modifier = modifier) {
+        AlertDialog(
+            onDismissRequest = {
+                onDismiss()
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    onUpdateClick(number)
+                }) {
+                    Text(text = "Update")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { onDelete(currentElement) }) {
+                    Text(text = "Delete")
+                }
+            },
+            text = {
+                Column(modifier = Modifier.align(Center)) {
+                    TextField(
+                        value = number.toString(),
+                        onValueChange = {
+                            number = if (it.isEmpty()) 0 else
+                                it.toInt()
+                        },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        colors = TextFieldDefaults.textFieldColors(MaterialTheme.colors.onSurface),
+                        textStyle = TextStyle(color = Color.White)
+                    )
+                }
+            },
+            backgroundColor = MaterialTheme.colors.surface,
+            modifier = Modifier.clip(RoundedCornerShape(10.dp))
+        )
+    }
+
 }
 
 @Composable
@@ -162,7 +250,7 @@ fun ArrayItemReprisentation(
     width: Int,
     index: Int,
     element: Int,
-    onClick: (Int) -> Unit
+    onClick: (Int) -> Unit,
 ) {
 
     var isEnabled by remember {
@@ -181,20 +269,20 @@ fun ArrayItemReprisentation(
         isEnabled = true
     }
 
-    Log.d("test", height.toString())
 
     Column(modifier = modifier) {
         Text(
             text = element.toString(),
-            modifier = Modifier.align(CenterHorizontally),
+            modifier = Modifier
+                .align(CenterHorizontally)
+                .clickable { onClick(index) },
             color = Color.White,
             fontSize = (width / 3).sp,
         )
         Box(modifier = Modifier
             .height(boxHeight.value.dp)
             .width(width.dp)
-            .background(LightGrayBlue)
-            .clickable { onClick(index) })
+            .background(LightGrayBlue))
 
     }
 
@@ -205,7 +293,7 @@ fun TabBarSection(
     modifier: Modifier = Modifier,
     tabs: List<TabItem>,
     code: AlgorithmCode,
-    algorithmDescription: String
+    algorithmDescription: String,
 ) {
 
     var selectedTab by remember {
@@ -255,7 +343,7 @@ fun TabItem(
     tab: TabItem,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    isSelected: Boolean
+    isSelected: Boolean,
 ) {
     Box(modifier = modifier.clickable { onClick() }, contentAlignment = Alignment.Center) {
 
@@ -348,7 +436,7 @@ fun BottomBar(
     onSpeedUpClick: () -> Unit,
     onSlowDownClick: () -> Unit,
     isPlaying: Boolean = false,
-    backgroundColor: Color = MaterialTheme.colors.surface
+    backgroundColor: Color = MaterialTheme.colors.surface,
 ) {
 
     BottomAppBar(
@@ -370,13 +458,11 @@ fun BottomBar(
                 )
             }
 
-            IconButton(onClick = { onPlayPauseClick() }) {
+            IconButton(onClick = {
+                onPlayPauseClick()
+            }) {
                 Icon(
                     painter = if (!isPlaying) painterResource(id = R.drawable.ic_play).also {
-                        Log.d(
-                            "test",
-                            "test"
-                        )
                     } else painterResource(
                         id = R.drawable.ic_pause
                     ),
