@@ -17,6 +17,8 @@ class ArrayOperations {
             mutableArray.forEachIndexed { i, item ->
                 tempArr[i] = item
             }
+
+            Log.d("ArrayOperations","deleteArrayElement i=$index")
             return tempArr
         }
 

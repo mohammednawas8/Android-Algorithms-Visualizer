@@ -1,6 +1,7 @@
 package com.example.algorithmsvisualizer.di.modules
 
 import android.content.Context
+import com.example.algorithmsvisualizer.algorithms.sorting.InsertionSort
 import com.example.algorithmsvisualizer.data.db.AlgorithmDatabase
 import com.example.algorithmsvisualizer.repo.AlgorithmRepository
 import com.example.algorithmsvisualizer.repo.AlgorithmRepositoryImpl

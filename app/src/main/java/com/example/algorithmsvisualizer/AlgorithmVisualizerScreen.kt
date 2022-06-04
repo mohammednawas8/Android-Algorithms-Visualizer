@@ -31,23 +31,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.lifecycleScope
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.algorithmsvisualizer.data.model.AlgorithmCode
 import com.example.algorithmsvisualizer.events.AppEvents
-import com.example.algorithmsvisualizer.helper.ArrayOperations
 import com.example.algorithmsvisualizer.ui.theme.LightGrayBlue
 import com.example.algorithmsvisualizer.ui.theme.WorkSans
 import com.example.algorithmsvisualizer.viewmodel.AlgorithmViewModel
 import com.example.algorithmsvisualizer.viewmodel.ScreensViewModel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 @Composable
 fun AlgorithmVisualizerScreen(
     algorithmId: Int,
     screenViewModel: ScreensViewModel,
-    algorithmViewModel: AlgorithmViewModel,
+    algorithmViewModel: AlgorithmViewModel = hiltViewModel(),
     navController: NavController,
 ) {
 
@@ -56,11 +53,10 @@ fun AlgorithmVisualizerScreen(
     val codes = screenViewModel.algorithmCodes.value
 
 
-
     val arr = algorithmViewModel.arrState.value
 
 
-    var isAlgorithmPlaying by remember {
+    var shouldStartAlgorithm by remember {
         mutableStateOf(false)
     }
 
@@ -68,7 +64,7 @@ fun AlgorithmVisualizerScreen(
 
 
     if (onSortingFinish) {
-        isAlgorithmPlaying = false
+        shouldStartAlgorithm = false
     }
 
     Scaffold(
@@ -83,15 +79,22 @@ fun AlgorithmVisualizerScreen(
             BottomBar(
                 modifier = Modifier.fillMaxWidth(),
                 onPlayPauseClick = {
-                    isAlgorithmPlaying = !isAlgorithmPlaying
-                    algorithmViewModel.onAction(AppEvents.AlgorithmSorting(algorithm, arr, 500))
+                    shouldStartAlgorithm = !shouldStartAlgorithm
+
+                    if (shouldStartAlgorithm) {
+                        algorithmViewModel.onAction(AppEvents.SortAlgorithm(algorithm, arr, 500))
+                        Log.d("test","arrayBeforePause ${arr.toMutableList().toString()}")
+                    }
+
+                    else
+                        algorithmViewModel.onAction(AppEvents.Pause)
                 },
 
                 onNextStepClick = { /*TODO*/ },
                 onBackStepClick = { /*TODO*/ },
                 onSpeedUpClick = { /*TODO*/ },
                 onSlowDownClick = { /*TODO*/ },
-                isPlaying = isAlgorithmPlaying
+                isPlaying = shouldStartAlgorithm
 
             )
         }
@@ -106,7 +109,8 @@ fun AlgorithmVisualizerScreen(
                 modifier = Modifier
                     .weight(0.4f)
                     .fillMaxWidth(),
-                arr
+                arr,
+                algorithmViewModel
             )
 
             TabBarSection(
@@ -131,6 +135,7 @@ fun AlgorithmVisualizerScreen(
 fun VisualizerSection(
     modifier: Modifier = Modifier,
     elements: Array<Int>,
+    algorithmViewModel: AlgorithmViewModel
 //    onValueChangeClick: (Int) -> Unit,
 ) {
 
@@ -184,7 +189,7 @@ fun VisualizerSection(
                     shouldShowChangeValueAlert = false
                 },
                 onDelete = {
-                    arr = ArrayOperations.deleteArrayElement(arr, indexToChange)
+                    algorithmViewModel.onAction(AppEvents.DeleteItem(indexToChange))
                     shouldShowChangeValueAlert = false
                 },
                 onDismiss = { shouldShowChangeValueAlert = false },

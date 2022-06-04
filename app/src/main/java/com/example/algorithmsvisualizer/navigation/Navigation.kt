@@ -78,7 +78,6 @@ fun Navigation(
 
             AlgorithmVisualizerScreen(algorithmId = algorithmId!!,
                 screenViewModel = screenViewModel,
-                algorithmViewModel = algorithmViewModel,
                 navController = navController
             )
 
