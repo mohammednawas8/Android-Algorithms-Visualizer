@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import com.example.algorithmsvisualizer.data.model.AlgorithmCode
 import com.example.algorithmsvisualizer.events.AppEvents
@@ -39,6 +40,8 @@ import com.example.algorithmsvisualizer.ui.theme.LightGrayBlue
 import com.example.algorithmsvisualizer.ui.theme.WorkSans
 import com.example.algorithmsvisualizer.viewmodel.AlgorithmViewModel
 import com.example.algorithmsvisualizer.viewmodel.ScreensViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @Composable
 fun AlgorithmVisualizerScreen(
@@ -52,9 +55,10 @@ fun AlgorithmVisualizerScreen(
 
     val codes = screenViewModel.algorithmCodes.value
 
-    val arr by remember {
-        mutableStateOf(arrayOf(250, 31, 8, 32, 15, 75, 48, 374, 92, 52, 84))
-    }
+
+
+    val arr = algorithmViewModel.arrState.value
+
 
     var isAlgorithmPlaying by remember {
         mutableStateOf(false)
@@ -63,7 +67,7 @@ fun AlgorithmVisualizerScreen(
     var onSortingFinish = algorithmViewModel.onSortingFinish.value
 
 
-    if(onSortingFinish) {
+    if (onSortingFinish) {
         isAlgorithmPlaying = false
     }
 
@@ -80,7 +84,7 @@ fun AlgorithmVisualizerScreen(
                 modifier = Modifier.fillMaxWidth(),
                 onPlayPauseClick = {
                     isAlgorithmPlaying = !isAlgorithmPlaying
-                    algorithmViewModel.onAction(AppEvents.AlgorithmSorting(algorithm,arr,300))
+                    algorithmViewModel.onAction(AppEvents.AlgorithmSorting(algorithm, arr, 500))
                 },
 
                 onNextStepClick = { /*TODO*/ },
@@ -274,15 +278,16 @@ fun ArrayItemReprisentation(
         Text(
             text = element.toString(),
             modifier = Modifier
-                .align(CenterHorizontally)
-                .clickable { onClick(index) },
+                .align(CenterHorizontally),
             color = Color.White,
             fontSize = (width / 3).sp,
         )
         Box(modifier = Modifier
             .height(boxHeight.value.dp)
             .width(width.dp)
-            .background(LightGrayBlue))
+            .background(LightGrayBlue)
+            .clickable { onClick(index) }
+        )
 
     }
 
