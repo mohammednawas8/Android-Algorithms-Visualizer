@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.algorithmsvisualizer.algorithms.sorting.InsertionSort
+import com.example.algorithmsvisualizer.algorithms.AlgorithmsImpl
 import com.example.algorithmsvisualizer.events.AppEvents
 import com.example.algorithmsvisualizer.helper.ArrayOperations
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AlgorithmViewModel @Inject constructor(
-    private val insertionSort: InsertionSort
+    private val algorithmsImpl: AlgorithmsImpl
 ) : ViewModel() {
 
     val onSortingFinish = mutableStateOf(false)
@@ -42,16 +42,16 @@ class AlgorithmViewModel @Inject constructor(
 
             is AppEvents.Pause -> pauseInsertionSort()
 
-            is AppEvents.IncreaseDelay -> insertionSort.increaseDelay(event.increaseAmount)
+            is AppEvents.IncreaseDelay -> algorithmsImpl.increaseDelay(event.increaseAmount)
 
-            is AppEvents.DecreaseDelay -> insertionSort.decreaseDelay(event.decreaseAmount)
+            is AppEvents.DecreaseDelay -> algorithmsImpl.decreaseDelay(event.decreaseAmount)
 
             else -> {}
         }
     }
 
     private fun pauseInsertionSort() {
-        insertionSort.pause()
+        algorithmsImpl.pause()
     }
 
 
@@ -61,7 +61,7 @@ class AlgorithmViewModel @Inject constructor(
         delayDuration: Long,
 
         ) = viewModelScope.launch {
-        insertionSort.sort(
+        algorithmsImpl.insertionSort(
             arr,
             delayDuration,
             jChange = {
