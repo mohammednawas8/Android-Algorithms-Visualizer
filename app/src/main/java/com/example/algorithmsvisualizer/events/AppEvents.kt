@@ -15,4 +15,6 @@ sealed class AppEvents {
     class SortAlgorithm(val algorithm: Algorithm, val arr:Array<Int>, val delay:Long): AppEvents()
     class DeleteItem(val index: Int) : AppEvents()
     object Pause: AppEvents()
+    class IncreaseDelay(val increaseAmount: Long): AppEvents()
+    class DecreaseDelay(val decreaseAmount: Long): AppEvents()
 }

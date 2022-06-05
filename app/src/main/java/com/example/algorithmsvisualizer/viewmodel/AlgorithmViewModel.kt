@@ -42,6 +42,10 @@ class AlgorithmViewModel @Inject constructor(
 
             is AppEvents.Pause -> pauseInsertionSort()
 
+            is AppEvents.IncreaseDelay -> insertionSort.increaseDelay(event.increaseAmount)
+
+            is AppEvents.DecreaseDelay -> insertionSort.decreaseDelay(event.decreaseAmount)
+
             else -> {}
         }
     }

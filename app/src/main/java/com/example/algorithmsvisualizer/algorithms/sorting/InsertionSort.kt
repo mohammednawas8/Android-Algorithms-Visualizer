@@ -44,7 +44,7 @@ class InsertionSort() {
                 onSwap(arr)
                 i -= 1
             }
-            delay(delayDuration!! * 3)
+            delay((delayDuration!! * 1.5).toLong())
             arr[i + 1] = key
             onSwap(arr)
         }
@@ -57,16 +57,16 @@ class InsertionSort() {
 
     }
 
-    fun increaseDelay() {
+    fun increaseDelay(increaseAmount: Long) {
         if (delayDuration != null)
-            delayDuration = (delayDuration!! / 2) + delayDuration!!
+            delayDuration = increaseAmount + delayDuration!!
 
     }
 
-    fun decreaseDelay() {
+    fun decreaseDelay(decreaseAmount: Long) {
         if (delayDuration != null) {
             if (delayDuration!! > 50)
-                delayDuration = delayDuration!! - (delayDuration!! / 2)
+                delayDuration = delayDuration!! - decreaseAmount
         }
     }
 }
