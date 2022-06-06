@@ -125,7 +125,9 @@ fun AlgorithmCard(
                 contentDescription = algorithm.name,
                 modifier = Modifier
                     .clip(RoundedCornerShape(5.dp))
-                    .shadow(5.dp),
+                    .shadow(5.dp)
+                    .fillMaxWidth()
+                ,
                 contentScale = ContentScale.Crop
             )
 

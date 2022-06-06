@@ -84,10 +84,8 @@ fun AlgorithmVisualizerScreen(
 
                     if (shouldStartAlgorithm) {
                         algorithmViewModel.onAction(AppEvents.SortAlgorithm(algorithm, arr, 500))
-                        Log.d("test","arrayBeforePause ${arr.toMutableList().toString()}")
-                    }
-
-                    else
+                        Log.d("test", "arrayBeforePause ${arr.toMutableList().toString()}")
+                    } else
                         algorithmViewModel.onAction(AppEvents.Pause)
                 },
 
@@ -146,9 +144,15 @@ fun VisualizerSection(
         val maxHeight = constraints.maxHeight
         val maxWidth = constraints.maxWidth
 
-
+        /**
+         * I tested the app on 1440p phone width and found that there was no space between the items.
+         * I will handle it by checking if the maxWidth is 1440p then i will increase the space
+         */
         val itemWidth = remember {
-            ((maxWidth / arr.size) / 3.2).toInt()
+            if (maxWidth < 1440)
+                ((maxWidth / arr.size) / 3.5).toInt()
+            else
+                ((maxWidth / arr.size) / 4.5).toInt()
         }
 
         var indexToChange by remember {
