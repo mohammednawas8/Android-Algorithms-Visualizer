@@ -141,7 +141,7 @@ fun AlgorithmCard(
 
 
             Text(
-                text = algorithm.generalInformation.trim(),
+                text = algorithm.title.trim(),
                 color = descriptionTextColor,
                 modifier = Modifier
                     .padding(horizontal = 8.dp),

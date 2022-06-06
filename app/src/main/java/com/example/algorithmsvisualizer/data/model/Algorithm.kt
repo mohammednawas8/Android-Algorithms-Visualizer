@@ -10,7 +10,8 @@ data class Algorithm(
     val algorithmId: Int,
     val name: String,
     val timeComplexity: String,
-    val generalInformation: String,
-    val groupId: Int
+    val description: String,
+    val groupId: Int,
+    val title: String
 ) {
 }

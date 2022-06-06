@@ -1,5 +1,6 @@
 package com.example.algorithmsvisualizer.algorithms
 
+import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.delay
 
 class AlgorithmsImpl(): Algorithms {

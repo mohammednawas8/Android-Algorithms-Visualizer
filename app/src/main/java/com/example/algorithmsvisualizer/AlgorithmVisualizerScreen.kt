@@ -39,6 +39,7 @@ import com.example.algorithmsvisualizer.ui.theme.LightGrayBlue
 import com.example.algorithmsvisualizer.ui.theme.WorkSans
 import com.example.algorithmsvisualizer.viewmodel.AlgorithmViewModel
 import com.example.algorithmsvisualizer.viewmodel.ScreensViewModel
+import com.ireward.htmlcompose.HtmlText
 
 @Composable
 fun AlgorithmVisualizerScreen(
@@ -122,7 +123,7 @@ fun AlgorithmVisualizerScreen(
                     TabItem(icon = painterResource(id = R.drawable.ic_code), "Code"),
                 ),
                 code = if (codes.isNotEmpty()) codes.first() else AlgorithmCode("", 0, ""),
-                algorithm.generalInformation
+                algorithm.description
             )
         }
 
@@ -333,13 +334,11 @@ fun TabBarSection(
             verticalArrangement = Arrangement.Top
         ) {
             SelectionContainer {
-                Text(
-                    text = if (selectedTab == 0) algorithmDescription else code.code,
+                HtmlText(
+                    text = if (selectedTab == 0) algorithmDescription.trim() else code.code.trim(),
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(start = 10.dp, end = 10.dp, bottom = 15.dp),
-                    color = Color.White,
-                    fontWeight = FontWeight.Light
+                        .padding(start = 10.dp, end = 10.dp, bottom = 10.dp, top = 10.dp),
                 )
             }
         }

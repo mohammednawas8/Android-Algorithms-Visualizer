@@ -28,7 +28,7 @@ class ScreensViewModel @Inject constructor(
 
     val algorithmState = mutableStateOf<Algorithm>(
         Algorithm(
-            0, "", "", "", 0
+            0, "", "", "", 0,""
         )
     )
 

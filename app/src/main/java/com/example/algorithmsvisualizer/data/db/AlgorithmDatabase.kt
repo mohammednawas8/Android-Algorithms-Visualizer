@@ -8,7 +8,7 @@ import com.example.algorithmsvisualizer.data.model.Algorithm
 import com.example.algorithmsvisualizer.data.model.AlgorithmCode
 import com.example.algorithmsvisualizer.data.model.AlgorithmGroup
 
-@Database(entities = [Algorithm::class, AlgorithmGroup::class, AlgorithmCode::class], version = 1)
+@Database(entities = [Algorithm::class, AlgorithmGroup::class, AlgorithmCode::class], version = 2)
 abstract class AlgorithmDatabase : RoomDatabase() {
     abstract val algorithmDao: AlgorithmDao
 
