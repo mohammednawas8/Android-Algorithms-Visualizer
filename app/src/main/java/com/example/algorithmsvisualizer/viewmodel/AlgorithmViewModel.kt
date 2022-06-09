@@ -22,6 +22,7 @@ class AlgorithmViewModel @Inject constructor(
         mutableStateOf(arrayOf(100, 120, 80, 55, 90, 150, 170, 30, 20, 310, 17, 100, 67, 90))
 
 
+
     fun onAction(event: AppEvents) {
         when (event) {
 
@@ -55,7 +56,6 @@ class AlgorithmViewModel @Inject constructor(
     }
 
 
-
     private fun insertionSort(
         arr: Array<Int>,
         delayDuration: Long,
@@ -68,14 +68,16 @@ class AlgorithmViewModel @Inject constructor(
 
             },
             iChange = {
+                // Clear the array
+                //add the new element
 
             },
             onSwap = {
                 copyArrayIntoArrState(it, it.size)
             },
             onPause = {
-                copyArrayIntoArrState(it,it.size)
-                Log.d("test",it.toMutableList().toString())
+                copyArrayIntoArrState(it, it.size)
+                Log.d("test", it.toMutableList().toString())
             }
         )
 

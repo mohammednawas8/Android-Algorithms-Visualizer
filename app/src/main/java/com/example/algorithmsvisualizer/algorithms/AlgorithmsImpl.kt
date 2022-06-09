@@ -1,13 +1,14 @@
 package com.example.algorithmsvisualizer.algorithms
 
-import androidx.compose.ui.graphics.Color
+import android.util.Log
 import kotlinx.coroutines.delay
 
-class AlgorithmsImpl(): Algorithms {
+class AlgorithmsImpl() : Algorithms {
 
     private var delayDuration: Long? = null
     private var isPaused = false
     private var jState = 1
+    private var iState = 0
 
 
     override suspend fun insertionSort(
@@ -39,7 +40,6 @@ class AlgorithmsImpl(): Algorithms {
 
                 if (isPaused) {
                     onPause(arr)
-
                     return
                 }
 
@@ -47,7 +47,9 @@ class AlgorithmsImpl(): Algorithms {
                 delay(delayDuration!!)
                 arr[i + 1] = arr[i]
                 onSwap(arr)
+
                 i -= 1
+
             }
             delay((delayDuration!! * 1.5).toLong())
             arr[i + 1] = key
@@ -58,16 +60,8 @@ class AlgorithmsImpl(): Algorithms {
 
     }
 
-
-
-
     fun pause() {
         isPaused = true
-    }
-
-
-    fun resume() {
-
     }
 
     fun increaseDelay(increaseAmount: Long) {

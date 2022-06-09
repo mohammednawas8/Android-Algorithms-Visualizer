@@ -40,11 +40,12 @@ fun AlgorithmListScreen(
     ) {
 
 
-
-            Row(
-                modifier = Modifier.fillMaxWidth().padding( vertical = 15.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 15.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
 
 //                Icon(
 //                    imageVector = Icons.Default.ArrowBack,
@@ -54,13 +55,13 @@ fun AlgorithmListScreen(
 //                        navController.navigateUp()
 //                    }.padding(start = 5.dp)
 //                )
-                    SearchBar(
-                        onTextChange = {}, modifier = Modifier
-                            .fillMaxWidth()
-                            .height(60.dp)
-                            .padding(horizontal = 10.dp)
-                    )
-                }
+            SearchBar(
+                onTextChange = {}, modifier = Modifier
+                    .fillMaxWidth()
+                    .height(60.dp)
+                    .padding(horizontal = 10.dp)
+            )
+        }
 
 
 
@@ -85,13 +86,20 @@ fun AlgorithmList(
 ) {
     LazyColumn(
         modifier = modifier,
-        contentPadding = PaddingValues(top = 10.dp, bottom = 10.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(top = 10.dp, bottom = 20.dp),
+        verticalArrangement = Arrangement.spacedBy(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(algorithmsItems.size) {
             AlgorithmCard(
-                image = painterResource(id = R.drawable.insertion_sort),
+                image = painterResource(
+                    id = when (algorithmsItems[it].name) {
+                        "Insertion Sort" -> R.drawable.insertion_sort
+                        "Selection Sort" -> R.drawable.selection_sort
+                        else -> 0
+                    }
+
+                ),
                 algorithm = algorithmsItems[it],
                 onClick = onClick,
             )
@@ -127,7 +135,7 @@ fun AlgorithmCard(
                     .clip(RoundedCornerShape(5.dp))
                     .shadow(5.dp)
                     .fillMaxWidth()
-                ,
+                    .height(190.dp),
                 contentScale = ContentScale.Crop
             )
 
