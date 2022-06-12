@@ -36,10 +36,14 @@ class AlgorithmsImpl() : Algorithms {
             val key = arr[j]
             var i = j - 1
 
+
+
             while (i >= 0 && arr[i] > key) {
 
                 if (isPaused) {
                     onPause(arr)
+                    i += 1
+                    jState --
                     return
                 }
 
@@ -50,6 +54,8 @@ class AlgorithmsImpl() : Algorithms {
 
                 i -= 1
 
+
+
             }
             delay((delayDuration!! * 1.5).toLong())
             arr[i + 1] = key
@@ -59,6 +65,7 @@ class AlgorithmsImpl() : Algorithms {
         isPaused = false
 
     }
+
 
     fun pause() {
         isPaused = true
