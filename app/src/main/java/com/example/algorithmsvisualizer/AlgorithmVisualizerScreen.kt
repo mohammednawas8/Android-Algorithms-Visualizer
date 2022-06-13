@@ -83,8 +83,7 @@ fun AlgorithmVisualizerScreen(
                     shouldStartAlgorithm = !shouldStartAlgorithm
 
                     if (shouldStartAlgorithm) {
-                        algorithmViewModel.onAction(AppEvents.SortAlgorithm(algorithm, arr, 500))
-                        Log.d("test", "arrayBeforePause ${arr.toMutableList().toString()}")
+                        algorithmViewModel.onAction(AppEvents.SortAlgorithm(algorithm, arr, 700))
                     } else
                         algorithmViewModel.onAction(AppEvents.Pause)
                 },

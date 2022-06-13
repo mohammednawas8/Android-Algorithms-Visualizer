@@ -19,7 +19,7 @@ class AlgorithmViewModel @Inject constructor(
     val onSortingFinish = mutableStateOf(false)
 
     val arrState =
-        mutableStateOf(arrayOf(100, 120, 80, 55, 90, 150, 170, 30, 20, 310, 17, 100, 67, 90))
+        mutableStateOf(arrayOf(100, 120, 80, 55))
 
 
 
@@ -27,12 +27,11 @@ class AlgorithmViewModel @Inject constructor(
         when (event) {
 
             is AppEvents.SortAlgorithm -> {
-
                 onSortingFinish.value = false
-
                 val algorithm = event.algorithm
                 arrState.value = event.arr
                 val delay = event.delay
+
                 if (algorithm.name == "Insertion Sort") {
                     insertionSort(arrState.value, delay)
                 }
