@@ -8,7 +8,8 @@ interface Algorithms {
         jChange: (Int) -> Unit,
         iChange: (Int) -> Unit,
         onSwap: (Array<Int>) -> Unit,
-        onPause: (Array<Int>) -> Unit
+        onPause: (Array<Int>) -> Unit,
+        size: Int
     )
 
 }

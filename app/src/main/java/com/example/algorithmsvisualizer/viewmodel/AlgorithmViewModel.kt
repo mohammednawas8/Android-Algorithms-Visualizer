@@ -8,6 +8,7 @@ import com.example.algorithmsvisualizer.algorithms.AlgorithmsImpl
 import com.example.algorithmsvisualizer.events.AppEvents
 import com.example.algorithmsvisualizer.helper.ArrayOperations
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.multibindings.ElementsIntoSet
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,9 +20,9 @@ class AlgorithmViewModel @Inject constructor(
     val onSortingFinish = mutableStateOf(false)
 
     val arrState =
-        mutableStateOf(arrayOf(100, 120, 80, 55))
+        mutableStateOf(arrayOf(100, 120, 80, 55, 40, 5, 25, 320, 80,23,534,64))
 
-
+    private var stepSize = 2
 
     fun onAction(event: AppEvents) {
         when (event) {
@@ -32,9 +33,7 @@ class AlgorithmViewModel @Inject constructor(
                 arrState.value = event.arr
                 val delay = event.delay
 
-                if (algorithm.name == "Insertion Sort") {
-                    insertionSort(arrState.value, delay)
-                }
+                startAlgorithm(algorithm.name, delay, arrState.value.size)
 
             }
 
@@ -46,9 +45,25 @@ class AlgorithmViewModel @Inject constructor(
 
             is AppEvents.DecreaseDelay -> algorithmsImpl.decreaseDelay(event.decreaseAmount)
 
+            is AppEvents.NextStep -> nextStep(event.algorithm.name)
+
+
             else -> {}
         }
     }
+
+    private fun nextStep(name: String) {
+
+    }
+
+    private fun startAlgorithm(name: String, delay: Long, size: Int) {
+        when (name) {
+            "Insertion Sort" -> insertionSort(arrState.value, delay, size)
+        }
+
+
+    }
+
 
     private fun pauseInsertionSort() {
         algorithmsImpl.pause()
@@ -58,8 +73,8 @@ class AlgorithmViewModel @Inject constructor(
     private fun insertionSort(
         arr: Array<Int>,
         delayDuration: Long,
-
-        ) = viewModelScope.launch {
+        size: Int
+    ) = viewModelScope.launch {
         algorithmsImpl.insertionSort(
             arr,
             delayDuration,
@@ -77,7 +92,8 @@ class AlgorithmViewModel @Inject constructor(
             onPause = {
                 copyArrayIntoArrState(it, it.size)
                 Log.d("test", it.toMutableList().toString())
-            }
+            },
+            size
         )
 
         // Sorting is finished

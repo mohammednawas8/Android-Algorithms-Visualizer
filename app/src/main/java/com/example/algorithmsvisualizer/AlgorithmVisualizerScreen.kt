@@ -88,8 +88,17 @@ fun AlgorithmVisualizerScreen(
                         algorithmViewModel.onAction(AppEvents.Pause)
                 },
 
-                onNextStepClick = { /*TODO*/ },
-                onBackStepClick = { /*TODO*/ },
+                onNextStepClick = {
+                    if (!shouldStartAlgorithm) {
+                        algorithmViewModel.onAction(AppEvents.NextStep(algorithm))
+
+                    }
+                },
+                onBackStepClick = {
+                    if (!shouldStartAlgorithm) {
+                        algorithmViewModel.onAction(AppEvents.PreviousStep(algorithm))
+                    }
+                },
                 onSpeedUpClick = { algorithmViewModel.onAction(AppEvents.IncreaseDelay(200)) },
                 onSlowDownClick = { algorithmViewModel.onAction(AppEvents.DecreaseDelay(100)) },
                 isPlaying = shouldStartAlgorithm

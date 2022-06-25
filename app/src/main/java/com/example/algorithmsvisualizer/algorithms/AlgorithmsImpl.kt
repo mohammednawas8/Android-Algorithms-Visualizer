@@ -7,6 +7,26 @@ class AlgorithmsImpl() : Algorithms {
 
     private var delayDuration: Long? = null
     private var isPaused = false
+    var size: Int = 0
+
+    fun pause() {
+        isPaused = true
+    }
+
+    fun increaseDelay(increaseAmount: Long) {
+        if (delayDuration != null)
+            delayDuration = increaseAmount + delayDuration!!
+
+    }
+
+    fun decreaseDelay(decreaseAmount: Long) {
+        if (delayDuration != null) {
+            if (delayDuration!! > 50)
+                delayDuration = delayDuration!! - decreaseAmount
+        }
+    }
+
+
     private var jState = 1
     private var iState = -1
     private var key = -1
@@ -19,11 +39,11 @@ class AlgorithmsImpl() : Algorithms {
         iChange: (Int) -> Unit,
         onSwap: (Array<Int>) -> Unit,
         onPause: (Array<Int>) -> Unit,
+        size: Int
     ) {
 
         delayDuration = delay
         isPaused = false
-        val size = arr.size
         for (j in jState until size) {
 
             jChange(j)
@@ -34,6 +54,7 @@ class AlgorithmsImpl() : Algorithms {
                 return
 
             }
+            Log.d("test2",j.toString())
 
             if (iState != -1) {
                 i = iState
@@ -70,22 +91,8 @@ class AlgorithmsImpl() : Algorithms {
         isPaused = false
     }
 
-    fun pause() {
-        isPaused = true
-    }
 
-    fun increaseDelay(increaseAmount: Long) {
-        if (delayDuration != null)
-            delayDuration = increaseAmount + delayDuration!!
 
-    }
-
-    fun decreaseDelay(decreaseAmount: Long) {
-        if (delayDuration != null) {
-            if (delayDuration!! > 50)
-                delayDuration = delayDuration!! - decreaseAmount
-        }
-    }
 
 
 }

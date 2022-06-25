@@ -7,9 +7,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
+import com.example.algorithmsvisualizer.algorithms.MergeSort
+import com.example.algorithmsvisualizer.algorithms.QuickSort
 import com.example.algorithmsvisualizer.navigation.Navigation
 import com.example.algorithmsvisualizer.ui.theme.AlgorithmsVisualizerTheme
 import com.example.algorithmsvisualizer.viewmodel.AlgorithmViewModel
@@ -22,6 +25,18 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+            val arr = arrayOf(5,3,67,24,53,1,0)
+            val m = QuickSort()
+            LaunchedEffect(key1 = true){
+
+                m.sort(arr,0,arr.size - 1)
+
+                arr.forEach {
+                    Log.d("test",it.toString())
+                }
+
+            }
+
             AlgorithmsVisualizerTheme {
                 Surface(modifier = Modifier
                     .fillMaxSize()
