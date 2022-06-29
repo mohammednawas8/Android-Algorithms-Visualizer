@@ -18,7 +18,7 @@ sealed class AppEvents {
     object Pause: AppEvents()
     class IncreaseDelay(val increaseAmount: Long): AppEvents()
     class DecreaseDelay(val decreaseAmount: Long): AppEvents()
-    class NextStep(val algorithm: Algorithm) : AppEvents()
-    class PreviousStep(val algorithm: Algorithm) : AppEvents()
+    object NextStep : AppEvents()
+    object PreviousStep : AppEvents()
     object Initialization : AppEvents()
 }

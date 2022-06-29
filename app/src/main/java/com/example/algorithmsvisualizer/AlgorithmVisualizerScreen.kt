@@ -62,8 +62,7 @@ fun AlgorithmVisualizerScreen(
 
     val arr = algorithmViewModel.arrState.value
 
-    arr.forEach {
-    }
+
 
     var shouldStartAlgorithm by remember {
         mutableStateOf(false)
@@ -98,13 +97,13 @@ fun AlgorithmVisualizerScreen(
 
                 onNextStepClick = {
                     if (!shouldStartAlgorithm) {
-                        algorithmViewModel.onAction(AppEvents.NextStep(algorithm))
+                        algorithmViewModel.onAction(AppEvents.NextStep)
 
                     }
                 },
                 onBackStepClick = {
                     if (!shouldStartAlgorithm) {
-                        algorithmViewModel.onAction(AppEvents.PreviousStep(algorithm))
+                        algorithmViewModel.onAction(AppEvents.PreviousStep)
                     }
                 },
                 onSpeedUpClick = { algorithmViewModel.onAction(AppEvents.IncreaseDelay(200)) },
@@ -206,8 +205,9 @@ fun VisualizerSection(
         if (shouldShowChangeValueAlert)
             ChangeElementAlertDialog(
                 onUpdateClick = {
-                    arr[indexToChange] = it
+                    algorithmViewModel.onAction(AppEvents.UpdateItem(indexToChange,it))
                     shouldShowChangeValueAlert = false
+
                 },
                 onDelete = {
                     algorithmViewModel.onAction(AppEvents.DeleteItem(indexToChange))

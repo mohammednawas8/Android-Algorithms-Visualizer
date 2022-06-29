@@ -23,7 +23,8 @@ class AlgorithmViewModel @Inject constructor(
     val arrState =
         mutableStateOf(arrayOf(100, 120, 80, 55, 40, 5, 25, 320, 80, 23, 534, 64))
 
-//    private var tempState = Array<Int>(arrState.value.size, { 1 })
+    var nextStep = 1
+    var previousStep = 0
 
     @SuppressLint("MutableCollectionMutableState")
     var sortedArrLevels = mutableListOf<List<Int>>()
@@ -53,7 +54,7 @@ class AlgorithmViewModel @Inject constructor(
 
             is AppEvents.DeleteItem -> deleteItemFromArray(event.index)
 
-            is AppEvents.UpdateItem -> updateItemInTheArray(event.index,event.value)
+            is AppEvents.UpdateItem -> updateItemInTheArray(event.index, event.value)
 
             is AppEvents.Pause -> pauseInsertionSort()
 
@@ -61,13 +62,13 @@ class AlgorithmViewModel @Inject constructor(
 
             is AppEvents.DecreaseDelay -> decreaseDelay(event.decreaseAmount)
 
-            is AppEvents.NextStep -> nextStep(event.algorithm.name)
+            is AppEvents.NextStep -> nextStep()
 
+            is AppEvents.PreviousStep -> previousStep()
 
             else -> {}
         }
     }
-
 
 
     private fun decreaseDelay(decreaseAmount: Long) {
@@ -81,7 +82,23 @@ class AlgorithmViewModel @Inject constructor(
 
     }
 
-    private fun nextStep(name: String) {
+    private fun nextStep() {
+        if (nextStep < sortedArrLevels.size && nextStep >= 1) {
+            copyArrayIntoArrState(sortedArrLevels[nextStep].toIntArray(), arrState.value.size)
+            Log.d("test","$nextStep $previousStep")
+            nextStep++
+            previousStep++
+        }
+    }
+
+    private fun previousStep() {
+
+        if (previousStep > 1) {
+            copyArrayIntoArrState(sortedArrLevels[previousStep].toIntArray(), arrState.value.size)
+            Log.d("test","$nextStep $previousStep")
+            nextStep--
+            previousStep--
+        }
 
     }
 
@@ -91,7 +108,7 @@ class AlgorithmViewModel @Inject constructor(
                 sortedArrLevels.forEach {
                     delay(delayDuration)
                     copyArrayIntoArrState(it.toIntArray(), size)
-                    Log.d("test",delayDuration.toString())
+                    Log.d("test", delayDuration.toString())
                 }
                 onSortingFinish.value = true
             }
@@ -147,15 +164,15 @@ class AlgorithmViewModel @Inject constructor(
     }
 
     private fun updateItemInTheArray(index: Int, value: Int) {
+        Log.d("test", "updating")
         val tempArr = arrState.value.clone()
         tempArr[index] = value
-        copyArrayIntoArrState(tempArr.toIntArray(),tempArr.size)
+
+        copyArrayIntoArrState(tempArr.toIntArray(), tempArr.size)
         refactorSortedArrayLevels()
-        arrState.value.forEach {
-        }
     }
 
-    private fun refactorSortedArrayLevels(){
+    private fun refactorSortedArrayLevels() {
         //Restore the sortedArrayLevels because we have already changed an element
         //and we resort the new arrState array
         sortedArrLevels = ArrayList()
