@@ -48,6 +48,12 @@ fun AlgorithmVisualizerScreen(
     algorithmViewModel: AlgorithmViewModel = hiltViewModel(),
     navController: NavController,
 ) {
+    LaunchedEffect(key1 = true){
+        algorithmViewModel.onAction(AppEvents.Initialization)
+    }
+
+    val levelList = algorithmViewModel.sortedArrLevels
+
 
     val algorithm = screenViewModel.algorithmState.value
 
@@ -56,6 +62,8 @@ fun AlgorithmVisualizerScreen(
 
     val arr = algorithmViewModel.arrState.value
 
+    arr.forEach {
+    }
 
     var shouldStartAlgorithm by remember {
         mutableStateOf(false)
@@ -83,7 +91,7 @@ fun AlgorithmVisualizerScreen(
                     shouldStartAlgorithm = !shouldStartAlgorithm
 
                     if (shouldStartAlgorithm) {
-                        algorithmViewModel.onAction(AppEvents.SortAlgorithm(algorithm, arr, 700))
+                        algorithmViewModel.onAction(AppEvents.SortAlgorithm(algorithm, arr, 850))
                     } else
                         algorithmViewModel.onAction(AppEvents.Pause)
                 },

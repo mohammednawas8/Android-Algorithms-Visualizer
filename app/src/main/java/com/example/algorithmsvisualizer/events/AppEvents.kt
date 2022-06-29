@@ -14,9 +14,11 @@ sealed class AppEvents {
     //Algorithm Visualizer Screen events
     class SortAlgorithm(val algorithm: Algorithm, val arr:Array<Int>, val delay:Long): AppEvents()
     class DeleteItem(val index: Int) : AppEvents()
+    class UpdateItem(val index: Int, val value: Int): AppEvents()
     object Pause: AppEvents()
     class IncreaseDelay(val increaseAmount: Long): AppEvents()
     class DecreaseDelay(val decreaseAmount: Long): AppEvents()
     class NextStep(val algorithm: Algorithm) : AppEvents()
     class PreviousStep(val algorithm: Algorithm) : AppEvents()
+    object Initialization : AppEvents()
 }
