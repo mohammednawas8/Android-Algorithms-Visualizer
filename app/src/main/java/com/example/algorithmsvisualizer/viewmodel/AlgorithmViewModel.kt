@@ -309,4 +309,6 @@ class AlgorithmViewModel @Inject constructor(
         //We don't pass the original arrState instead we pass a clone of it
     }
 
+    fun s(){}
+
 }
