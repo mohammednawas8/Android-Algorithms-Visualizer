@@ -10,7 +10,6 @@ sealed class AppEvents {
     //AlgorithmList Screen events
     class AlgorithmClick(val algorithm: Algorithm): AppEvents()
 
-
     //Algorithm Visualizer Screen events
     class SortAlgorithm(val algorithm: Algorithm, val arr:Array<Int>, val delay:Long): AppEvents()
     class DeleteItem(val index: Int) : AppEvents()
@@ -20,5 +19,5 @@ sealed class AppEvents {
     class DecreaseDelay(val decreaseAmount: Long): AppEvents()
     object NextStep : AppEvents()
     object PreviousStep : AppEvents()
-    object Initialization : AppEvents()
+    class Initialization(val algorithm: Algorithm) : AppEvents()
 }

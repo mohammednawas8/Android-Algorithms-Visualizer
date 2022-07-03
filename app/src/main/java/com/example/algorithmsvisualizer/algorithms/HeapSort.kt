@@ -1,24 +1,35 @@
 package com.example.algorithmsvisualizer.algorithms
 
-class HeapSort {
+class HeapSort : SortingAlgorithms() {
 
-    fun sort(arr: Array<Int>) {
+
+    override suspend fun sort(
+        arr: Array<Int>,
+        iChange: (Int) -> Unit,
+        jChange: (Int) -> Unit,
+        onSwap: (Array<Int>) -> Unit,
+    ) {
         val n = arr.size
 
         // Build heap (rearrange array)
-        for (i in n / 2 - 1 downTo 0) heapify(arr, n, i)
-
+        for (i in n / 2 - 1 downTo 0) {
+            heapify(arr, n, i)
+            iChange(i)
+            onSwap(arr)
+        }
         // One by one extract an element from heap
         for (i in n - 1 downTo 1) {
             // Move current root to end
             val temp = arr[0]
             arr[0] = arr[i]
             arr[i] = temp
-
+            iChange(i)
             // call max heapify on the reduced heap
             heapify(arr, i, 0)
+            onSwap(arr)
         }
     }
+
 
     // To heapify a subtree rooted with node i which is
     // an index in arr[]. n is size of heap
@@ -43,4 +54,5 @@ class HeapSort {
             heapify(arr, n, largest)
         }
     }
+
 }

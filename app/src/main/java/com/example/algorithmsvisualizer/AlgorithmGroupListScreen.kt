@@ -32,9 +32,14 @@ fun AlgorithmGroupListScreen(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-
+            SearchBar(
+                onTextChange = {}, modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 10.dp, end = 10.dp, top = 10.dp)
+            )
         AlgorithmList(
-            algorithmList = algorithmGroupStateList.value
+            algorithmList = algorithmGroupStateList.value,
+            modifier = Modifier.padding(top = 18.dp)
         ) { groupId,algorithmList ->
             onClick(groupId, algorithmList)
         }
@@ -51,7 +56,7 @@ fun AlgorithmList(
 
     LazyColumn(
         modifier = modifier,
-        contentPadding = PaddingValues(top = 30.dp, bottom = 15.dp, start = 15.dp, end = 15.dp),
+        contentPadding = PaddingValues( bottom = 15.dp, start = 15.dp, end = 15.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {

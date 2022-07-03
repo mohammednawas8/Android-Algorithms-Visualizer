@@ -9,7 +9,8 @@ class Selection {
         for (i in 0 until n - 1) {
             // Find the minimum element in unsorted array
             var min_idx = i
-            for (j in i + 1 until n) if (arr[j] < arr[min_idx]) min_idx = j
+            for (j in i + 1 until n)
+                if (arr[j] < arr[min_idx]) min_idx = j
 
             // Swap the found minimum element with the first
             // element

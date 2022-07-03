@@ -1,6 +1,6 @@
 package com.example.algorithmsvisualizer.di.modules
 
-import com.example.algorithmsvisualizer.algorithms.AlgorithmsImpl
+import com.example.algorithmsvisualizer.algorithms.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,5 +11,21 @@ import dagger.hilt.android.components.ViewModelComponent
 object AlgorithmVisualizerModule {
 
     @Provides
-    fun provideInsertionSort() = AlgorithmsImpl()
+    fun provideSelectionSort() = SelectionSort()
+
+    @Provides
+    fun provideInsertionSort() = InsertionSort()
+
+    @Provides
+    fun provideBubbleSort() = BubbleSort()
+
+    @Provides
+    fun provideMergeSort() = MergeSort()
+
+    @Provides
+    fun provideHeapSort() = HeapSort()
+
+    @Provides
+    fun provideQuickSort() = QuickSort()
+
 }

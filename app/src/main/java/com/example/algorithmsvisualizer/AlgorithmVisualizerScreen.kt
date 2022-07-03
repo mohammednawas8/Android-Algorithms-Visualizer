@@ -48,14 +48,16 @@ fun AlgorithmVisualizerScreen(
     algorithmViewModel: AlgorithmViewModel = hiltViewModel(),
     navController: NavController,
 ) {
-    LaunchedEffect(key1 = true){
-        algorithmViewModel.onAction(AppEvents.Initialization)
-    }
+
 
     val levelList = algorithmViewModel.sortedArrLevels
 
 
     val algorithm = screenViewModel.algorithmState.value
+
+    LaunchedEffect(key1 = true){
+        algorithmViewModel.onAction(AppEvents.Initialization(algorithm))
+    }
 
     val codes = screenViewModel.algorithmCodes.value
 

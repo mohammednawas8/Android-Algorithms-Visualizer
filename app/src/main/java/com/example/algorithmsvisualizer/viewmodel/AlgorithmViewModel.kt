@@ -5,7 +5,8 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.algorithmsvisualizer.algorithms.AlgorithmsImpl
+import com.example.algorithmsvisualizer.algorithms.*
+import com.example.algorithmsvisualizer.data.model.Algorithm
 import com.example.algorithmsvisualizer.events.AppEvents
 import com.example.algorithmsvisualizer.helper.ArrayOperations
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +16,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AlgorithmViewModel @Inject constructor(
-    private val algorithmsImpl: AlgorithmsImpl,
+    private val insertionSort: InsertionSort,
+    private val selectionSort: SelectionSort,
+    private val bubbleSort: BubbleSort,
+    private val mergeSort: MergeSort,
+    private val quickSort: QuickSort,
+    private val heapSort: HeapSort,
 ) : ViewModel() {
 
     val onSortingFinish = mutableStateOf(false)
@@ -37,19 +43,17 @@ class AlgorithmViewModel @Inject constructor(
         when (event) {
 
             is AppEvents.SortAlgorithm -> {
+                isPaused = false
                 onSortingFinish.value = false
-                val algorithm = event.algorithm
                 arrState.value = event.arr
-//                tempState = arrState.value.clone()
                 val delay = event.delay
                 this.delayDuration = delay
-                startAlgorithm(algorithm.name, arrState.value.size)
+                startAlgorithm(arrState.value.size)
 
             }
 
             is AppEvents.Initialization -> {
-//                tempState = arrState.value.clone()
-                insertionSort(arrState.value.clone())
+                prepareSortedArrLevels(event.algorithm)
             }
 
             is AppEvents.DeleteItem -> deleteItemFromArray(event.index)
@@ -70,6 +74,29 @@ class AlgorithmViewModel @Inject constructor(
         }
     }
 
+    private fun prepareSortedArrLevels(algorithm: Algorithm) {
+        when (algorithm.name) {
+            "Insertion Sort" -> {
+                insertionSort(arrState.value.clone())
+            }
+            "Selection Sort" -> {
+                selectionSort(arrState.value.clone())
+            }
+            "Merge Sort" -> {
+                mergeSort(arrState.value.clone())
+            }
+            "Heap Sort" -> {
+                heapSort(arrState.value.clone())
+            }
+            "Quick Sprt" -> {
+                quickSort(arrState.value.clone())
+            }
+            "Bubble Sort" -> {
+                bubbleSort(arrState.value.clone())
+            }
+        }
+    }
+
 
     private fun decreaseDelay(decreaseAmount: Long) {
         if (delayDuration > 160) {
@@ -82,50 +109,65 @@ class AlgorithmViewModel @Inject constructor(
 
     }
 
+    private var isNextStepClicked = false
     private fun nextStep() {
-        if (nextStep < sortedArrLevels.size && nextStep >= 1) {
+        if (nextStep < sortedArrLevels.size && nextStep >= 0) {
             copyArrayIntoArrState(sortedArrLevels[nextStep].toIntArray(), arrState.value.size)
-            Log.d("test","$nextStep $previousStep")
+            sortingState = nextStep
             nextStep++
             previousStep++
+            isNextStepClicked = true
         }
     }
 
     private fun previousStep() {
-
-        if (previousStep > 1) {
-            copyArrayIntoArrState(sortedArrLevels[previousStep].toIntArray(), arrState.value.size)
-            Log.d("test","$nextStep $previousStep")
-            nextStep--
+        //Solve bug
+        //bug description : When the user clicks on nextStep the previousStep will increment by 1
+        //the problem is when the user clicks on previous step after that increment.
+        //the solution is to check if the next step already clicked. if so then we decrement previousStep by 1.
+        if (isNextStepClicked) {
             previousStep--
+            nextStep--
+            isNextStepClicked = false
         }
 
-    }
-
-    private fun startAlgorithm(name: String, size: Int) {
-        when (name) {
-            "Insertion Sort" -> viewModelScope.launch {
-                sortedArrLevels.forEach {
-                    delay(delayDuration)
-                    copyArrayIntoArrState(it.toIntArray(), size)
-                    Log.d("test", delayDuration.toString())
-                }
-                onSortingFinish.value = true
+        if (previousStep >= 0) {
+            copyArrayIntoArrState(sortedArrLevels[previousStep].toIntArray(), arrState.value.size)
+            //To prevent the previousStep becoming -1
+            if (previousStep != 0) {
+                sortingState = previousStep
+                nextStep--
+                previousStep--
             }
         }
-
     }
 
+    private var isPaused = false
+    private var sortingState = 0
+    private fun startAlgorithm(size: Int) = viewModelScope.launch {
+        for (i in sortingState until sortedArrLevels.size) {
+            if (!isPaused) {
+                delay(delayDuration)
+                copyArrayIntoArrState(sortedArrLevels[i].toIntArray(), size)
+            } else {
+                sortingState = i
+                nextStep = i + 1
+                previousStep = i
+                return@launch
+            }
+        }
+        onSortingFinish.value = true
+    }
 
     private fun pauseInsertionSort() {
-        algorithmsImpl.pause()
+        isPaused = true
     }
 
 
     private fun insertionSort(
         arr: Array<Int>,
     ) = viewModelScope.launch {
-        algorithmsImpl.insertionSort(
+        insertionSort.sort(
             arr,
             iChange = { i ->
 
@@ -141,6 +183,92 @@ class AlgorithmViewModel @Inject constructor(
         // Sorting is finished
         onSortingFinish.value = true
 
+    }
+
+    private fun selectionSort(
+        arr: Array<Int>,
+    ) = viewModelScope.launch {
+        selectionSort.sort(
+            arr,
+            iChange = { i ->
+
+            },
+            jChange = { j ->
+
+            },
+            onSwap = { arr ->
+                addArrayIntoSortedArrLevels(arr)
+            }
+        )
+    }
+
+
+    private fun mergeSort(
+        arr: Array<Int>
+    ) = viewModelScope.launch {
+        mergeSort.sort(
+            arr,
+            iChange = { i ->
+
+            },
+            jChange = { j ->
+
+            },
+            onSwap = { arr ->
+                addArrayIntoSortedArrLevels(arr)
+            }
+        )
+    }
+
+    private fun heapSort(
+        arr: Array<Int>
+    ) = viewModelScope.launch {
+        heapSort.sort(
+            arr,
+            iChange = { i ->
+
+            },
+            jChange = { j ->
+
+            },
+            onSwap = { arr ->
+                addArrayIntoSortedArrLevels(arr)
+            }
+        )
+    }
+
+    private fun quickSort(
+        arr: Array<Int>
+    ) = viewModelScope.launch {
+        quickSort.sort(
+            arr,
+            iChange = { i ->
+
+            },
+            jChange = { j ->
+
+            },
+            onSwap = { arr ->
+                addArrayIntoSortedArrLevels(arr)
+            }
+        )
+    }
+
+    private fun bubbleSort(
+        arr: Array<Int>
+    ) = viewModelScope.launch {
+        bubbleSort.sort(
+            arr,
+            iChange = { i ->
+
+            },
+            jChange = { j ->
+
+            },
+            onSwap = { arr ->
+                addArrayIntoSortedArrLevels(arr)
+            }
+        )
     }
 
     private fun copyArrayIntoArrState(arr: IntArray, size: Int) {
