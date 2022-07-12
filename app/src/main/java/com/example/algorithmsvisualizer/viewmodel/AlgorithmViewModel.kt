@@ -88,7 +88,7 @@ class AlgorithmViewModel @Inject constructor(
             "Heap Sort" -> {
                 heapSort(arrState.value.clone())
             }
-            "Quick Sprt" -> {
+            "Quick Sort" -> {
                 quickSort(arrState.value.clone())
             }
             "Bubble Sort" -> {

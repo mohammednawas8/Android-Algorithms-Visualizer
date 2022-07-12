@@ -96,8 +96,12 @@ fun AlgorithmList(
             AlgorithmCard(
                 image = painterResource(
                     id = when (algorithmsItems[it].name) {
-                        "Insertion Sort" -> R.drawable.insertion_sort
-                        "Selection Sort" -> R.drawable.selection_sort
+                        "Insertion Sort" -> R.drawable.insertionsort
+                        "Selection Sort" -> R.drawable.selectionsort
+                        "Merge Sort" -> R.drawable.mergesort
+                        "Quick Sort" -> R.drawable.quicksort
+                        "Heap Sort" -> R.drawable.heasort
+                        "Bubble Sort" -> R.drawable.bubblesort
                         else -> 0
                     }
 
